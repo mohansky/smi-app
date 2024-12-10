@@ -34,10 +34,10 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => {
-        // Allow access only if the token exists
-        return !!token;
-      },
+      authorized: ({ token }) => !!token,
+    },
+    pages: {
+      signIn: "/login", // Specify the login page path
     },
   }
 );
