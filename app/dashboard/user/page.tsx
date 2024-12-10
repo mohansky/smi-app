@@ -1,7 +1,7 @@
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { getStudentByUserEmail } from "@/app/actions/users";
 import { getStudentById } from "@/app/actions/student";
-import { options } from "@/app/api/auth/[nextauth]/options";
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import { Container } from "@/components/custom-ui/container";
 import StudentDetails from "@/components/custom-ui/stutent-details";
 import { Heading } from "@/components/custom-ui/heading";
