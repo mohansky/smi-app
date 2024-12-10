@@ -1,0 +1,108 @@
+name: Sridhar Musical Institute
+title: Sridhar Musical Institute | Guitar, Drums and Keyboard classes
+logo: /images/smilogo.svg 
+description: Sridhar Musical Institute established in 1978 located in Ulsoor specializes in Guitar classes, Drum classes, Bass & Keyboard classes.
+intro: Sridhar Musical Institute established since 1978 by Late Stephen Joseph (Sridharan) which is located in Ulsoor, Bangalore. Also, the Founder of the band “The Unknowns” which was very famous for its own composition “Welcome to the Journey” The legacy is been carried on by Sunil Sridhar S & Sanjeev Sridhar S. Specialized coaching given for Guitar, Drums, Bass & Keyboard.
+basepath: https://sridharmusicalinstitute.com/
+keywords:
+  - Sridhar Musical Institute
+  - Guitar class
+  - Drum class
+  - Keyboard class
+author:
+  name: Sunil Steve
+  email: sridharmusicalinstitute@gmail.com
+  url: https://sridharmusicalinstitute.com/
+heroslider:
+  - image: /images/classes/guitar.jpg
+    title: Sridhar Musical Institute
+    subtitle: Since 1978
+    btnText: Contact
+    link: /#contact
+  - image: /images/classes/drums.jpg
+    title: SMI specializes in
+    subtitle: Guitars, Drums and Keyboard classes.
+    btnText: Classes
+    link: /classes
+links:
+  - text: Home
+    link: /
+  - text: About
+    link: /about
+  - text: Classes
+    link: /classes
+  - text: Gallery
+    link: /gallery
+  - text: Contact
+    link: /#contact 
+socials:
+  - name: Facebook
+    icon: ph:facebook-logo-light
+    link: https://www.facebook.com/Sridhar-Musical-Institute-419312658257153/
+  - name: Instagram
+    icon: ph:instagram-logo-light
+    link: https://www.instagram.com/sridharmusicalinstitute/
+  - name: YouTube
+    icon: ph:youtube-logo-light
+    link: https://www.youtube.com/@sridharmusicalinstitute1950/videos
+faq:
+  - question: How much do the classes cost?
+    answer: Admission Rs. 1,000/- Monthly Fees Rs. 3,000/- for regular classes and for Crash Course Rs.18,000/-. Late fee will be charged 200/-.
+  - question: How many classes per month?
+    answer: Weekly 2 classes and Monthly 8 Classes. If the student is absent, maximum 2 grace classes will be given. If the teacher misses the class, then it will be compensated wholly.
+  - question: Do I need to carry my own instruments?
+    answer: Yes. You can carry your own Guitar, Plectrum & Drumsticks. You can also hire instruments from SMI. Instrument Sales & Services are also undertaken.
+  - question: I have a friend who wants to learn, will I get a discount?
+    answer: Yes. References are appreciated and will be given a discount of 500/- each for the first month fee only.
+timmings:
+  - day: Monday
+    time: 10 am - 9 pm
+  - day: Tuesday
+    time: 10 am - 9 pm
+  - day: Wednesday
+    time: 10 am - 9 pm
+  - day: Thursday
+    time: 10 am - 9 pm
+  - day: Friday
+    time: 10 am - 9 pm
+  - day: Saturday
+    time: 10 am - 9 pm
+  - day: Sunday
+    time: Holiday
+contact:
+  - href: mailto:sridharmusicalinstitute@gmail.com
+    icon: ph:envelope-simple-light
+    name: sridharmusicalinstitute@gmail.com
+  - href: https://wa.me/00918197754070
+    icon: ph:whatsapp-logo-light
+    name: +91 819 775 4070
+  - href: tel:+918197754070
+    icon: ph:phone-light
+    name: +91 819 775 4070
+  - href: tel:+919980343554
+    icon: ph:phone-light
+    name: +91 998 034 3554
+address:
+  href: https://www.google.com/maps/place/Sridhar+Musical+Institute/@12.9708658,77.6252616,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae169fad7e2023:0xdbdbc6abe5688a4c!8m2!3d12.9708658!4d77.6278365!16s%2Fg%2F1th26v9p?entry=ttu&g_ep=EgoyMDI0MTAwOC4wIKXMDSoASAFQAw%3D%3D
+  icon: ph:map-pin-light
+  name:
+    - Sridhar Musical Institute
+    - 17/ 1 Cambridge Road Ulsoor
+    - Bangalore, India
+about:
+  title: About
+  image: /images/steve.jpg
+  description: excerpt of markdown content
+  body:
+    - Steves Unknowns captivating audiences in their journey of great musical performances, and still savoring it in its purest sense is a band engraved in the annals of Bangalore’s music vault, deep in its tradition and history.
+    - The band name by founder – Sridhar Stephen Joseph aka Steve – speaks for itself, as he goes down memory-lane recalling the birth of the name. “Once upon a time, backstage, preparing to come-on for the first time as a band, when the announcer interrupted me, demanding a band name. I paused for a moment, thinking deep – my mind was absolutely blank, regarding names–I was only thinking about the set list, not a band name in sight yet, it dawned on me the importance of this situation, we looked at each other, still no band name?We could not go unknown to the audience…the word Unknown for some strange reason echoed in my head, in-fact I’ve always believed I’m Unknown and from a deeper sense, I replied with ease, we are “The Unknowns”.
+    - Since then, through glorious years of performing in and around India, as-well-as various parts of the world, until the band sang its final swan song, The Unknowns have jammed to the tune of many a versatile ear, be it fans of Rock N’Roll, Hard Rock, Heavy Metal, Blues, Fusion, Pop to those ardent Indian Raga fans–lashing out music in their trademark style, improvising western feel with strong Indian roots, leaving audiences moving and grooving to The Unknowns–who were not   just a band, but a band of brothers!
+classesTitle: Sridhar Musical Institute specializes in Guitar, Drums and Keyboard classes. Our experienced faculty will guide you through your musical journey.    
+featuredVideo: https://www.youtube.com/embed/L90F-dqohu4?si=QrXMWy6pZXsQrmvX
+gallery:
+  - title: Guitar
+    image: /images/classes/guitar.jpg
+  - title: Drums
+    image: /images/classes/drums.jpg
+  - title: Keyboard
+    image: /images/classes/keyboard.jpg
