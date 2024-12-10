@@ -3,8 +3,8 @@ import { getPaymentsByStudent } from "@/app/actions/payment";
 import { paymentByStudentColumns } from "@/components/columns/payments-by-student-columns";
 import { paymentSchema } from "@/lib/validations/payments";
 import { getStudentByUserEmail } from "@/app/actions/users";
-import { getServerSession } from "next-auth";
-import { options } from "@/app/api/auth/[nextauth]/options";
+import { getServerSession } from "next-auth/next";
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import CustomDataTable from "@/components/custom-ui/custom-data-table";
 import { Heading } from "@/components/custom-ui/heading";
 
