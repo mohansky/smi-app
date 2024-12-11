@@ -70,8 +70,10 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-fira_sans)", ...fontFamily.sans],
-        display: ["var(--font-oxanium)"],
+        // sans: ["var(--font-fira_sans)", ...fontFamily.sans],
+        // display: ["var(--font-oxanium)"],
+        'firaSans': ['var(--font-fira-sans)', 'system-ui', 'sans-serif', ...fontFamily.sans],
+        'oxanium': ['var(--font-oxanium)', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {
