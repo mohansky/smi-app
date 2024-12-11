@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"; 
+} from "@/components/ui/sidebar";
 import { SidebarTrigger } from "./sidebar-trigger";
 import { useSession } from "next-auth/react";
 import {
@@ -22,6 +22,7 @@ import { ChevronUp, User2 } from "lucide-react";
 import { SignOutButton } from "../buttons/sign-out-button";
 import { adminMenu, userMenu } from "@/data/sidebar-menu";
 import { UserProfile } from "../user-profile";
+import { Skeleton } from "../ui/skeleton";
 
 interface Item {
   icon: React.ComponentType | string;
@@ -33,10 +34,22 @@ function SidebarIcon({ item }: { item: Item }) {
 }
 
 export function AppSidebar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <Skeleton className="h-[80vh] w-44" />;
+    // return <div>Sidebar is Loading...</div>;
+  }
+
+  if (status === "unauthenticated") {
+    return <div>Please log in</div>;
+  }
+
   const menu = session?.user?.role === "ADMIN" ? adminMenu : userMenu;
+
   return (
     <div className=" h-[80vh] my-auto">
+      
       <SidebarTrigger />
       <Sidebar
         variant="floating"
@@ -45,7 +58,9 @@ export function AppSidebar() {
       >
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>{session?.user?.role === "ADMIN" ? "Admin" : "User"} Dashboard</SidebarGroupLabel>
+            <SidebarGroupLabel>
+              {session?.user?.role === "ADMIN" ? "Admin" : "User"} Dashboard
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {menu.map((item) => (
@@ -63,7 +78,7 @@ export function AppSidebar() {
           </SidebarGroup>
         </SidebarContent>
 
-        <SidebarFooter >
+        <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
@@ -77,10 +92,12 @@ export function AppSidebar() {
                   side="top"
                   className="w-[--radix-popper-anchor-width] space-y-2"
                 >
-                  <DropdownMenuItem >
+                  <DropdownMenuItem>
                     <UserProfile />
-                  </DropdownMenuItem> 
-                  <SignOutButton />
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <SignOutButton />
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>

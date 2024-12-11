@@ -81,7 +81,7 @@ export const AttendanceForm = ({
   }, [form]);
 
   return (
-    <Card className="w-full max-w-6xl mx-auto">
+    <Card className="w-full mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
           Mark Attendance

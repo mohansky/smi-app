@@ -31,8 +31,8 @@ export default function HamburgerMenu() {
           <SheetContent aria-describedby={undefined} className="w-full">
             <ModeToggler />
 
-            <NavigationMenu className="my-20 mx-auto">
-              <NavigationMenuList className="mx-3 flex-col gap-5 w-full">
+            <NavigationMenu className="flex flex-col justify-center items-center  my-20 mx-auto">
+              <NavigationMenuList className=" flex-col gap-5 w-full">
                 {options.links.map((item, index) => (
                   <NavigationMenuItem key={index}>
                     <Link href={item.link} legacyBehavior passHref>
@@ -49,6 +49,9 @@ export default function HamburgerMenu() {
                 ))}
               </NavigationMenuList>
               <AuthButton />
+              {/* <SheetTrigger className="uppercase mx-auto">
+                <AuthButton />
+              </SheetTrigger> */}
             </NavigationMenu>
           </SheetContent>
         </Sheet>

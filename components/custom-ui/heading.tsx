@@ -32,8 +32,8 @@ const headingVariants = cva("tracking-wider", {
       thin: "font-thin",
     },
     fontstyle: {
-      sans: "font-sans",
-      display: "font-display",
+      sans: "font-firaSans",
+      display: "font-oxanium",
     },
   },
   defaultVariants: {
@@ -67,7 +67,9 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     const Comp = asChild ? Slot : "h2";
     return (
       <Comp
-        className={cn(headingVariants({ variant, size, fontweight, fontstyle, className }))}
+        className={cn(
+          headingVariants({ variant, size, fontweight, fontstyle, className })
+        )}
         ref={ref}
         {...props}
       >

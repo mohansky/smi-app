@@ -80,7 +80,7 @@ export const AddPaymentForm = ({
   }, [form]);
 
   return (
-    <Card className="w-full max-w-6xl mx-auto">
+    <Card className="w-full mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
           Add Fee Payment
@@ -134,7 +134,7 @@ export const AddPaymentForm = ({
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="amount"
@@ -169,7 +169,7 @@ export const AddPaymentForm = ({
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="transactionId"

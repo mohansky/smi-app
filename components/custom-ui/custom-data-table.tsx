@@ -241,7 +241,7 @@ export function CustomDataTable<TData, TValue>({
         </div>
       )}
 
-      <div className="rounded-md border">
+      <div className="rounded-md border  overflow-x-scroll">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -265,9 +265,10 @@ export function CustomDataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="even:bg-muted/75"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

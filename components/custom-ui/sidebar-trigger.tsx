@@ -4,12 +4,27 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { ViewVerticalIcon } from "@radix-ui/react-icons";
 
-export function SidebarTrigger({ className, ...props }: { className?: string }) {
+export function SidebarTrigger({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
   const { toggleSidebar } = useSidebar();
+
+  function handleToggle() {
+    try {
+      toggleSidebar();
+    } catch (error) {
+      console.error("Error toggling sidebar:", error);
+    }
+  }
 
   return (
     <Button
-      onClick={toggleSidebar}
+      aria-label="Open Sidebar"
+      // onClick={toggleSidebar}
+      onClick={handleToggle}
       data-sidebar="trigger"
       variant="ghost"
       size="icon"

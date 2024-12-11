@@ -30,14 +30,6 @@ export default function Hero() {
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
-      {/* <Image
-        className="absolute top-0 left-0 w-screen h-screen object-cover"
-        width={1920}
-        height={1080}
-        src="/images/classes/guitar.jpg"
-        alt={options.title}
-        title={options.title}
-      /> */}
       <CarouselContent className="">
         {options.heroslider.map((item, index) => (
           <CarouselItem key={index}>

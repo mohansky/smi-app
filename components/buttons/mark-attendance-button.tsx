@@ -22,7 +22,7 @@ export default function MarkAttendanceButton({ id }: { id: number }) {
             Mark Attendance
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-6xl">
+        <DialogContent className="sm:max-w-6xl max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Mark Attendance</DialogTitle>
           </DialogHeader>

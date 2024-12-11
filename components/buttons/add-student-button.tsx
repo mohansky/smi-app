@@ -28,7 +28,7 @@ export default function AddStudentButton() {
           Register Student
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-6xl">
+      <DialogContent className="sm:max-w-6xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Student</DialogTitle>
         </DialogHeader>
