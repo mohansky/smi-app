@@ -1,4 +1,4 @@
-import { Container } from "@/components/custom-ui/container";
+// import { Container } from "@/components/custom-ui/container";
 import { getAttendanceRecordsByStudent } from "@/app/actions/attendance";
 import { attendanceSchema } from "@/lib/validations/attendance";
 import { attendanceByStudentColumns } from "@/components/columns/attendance-by-student-columns";
@@ -20,11 +20,11 @@ export default async function AttendancePage() {
     const studentById = await getStudentByUserEmail(user?.email as string);
     if (!studentById) {
       return (
-        <Container width="marginy">
+        // <Container width="marginy">
           <Heading size="xs" className="text-destructive">
             No student data found for this user. Please contact administrator.
           </Heading>
-        </Container>
+        // </Container>
       );
     }
     const records = await getAttendanceRecordsByStudent(studentById.studentId);
@@ -38,18 +38,18 @@ export default async function AttendancePage() {
     });
 
     return (
-      <Container width="marginy">
+      // <Container width="marginy">
         <CustomDataTable
           columns={attendanceByStudentColumns}
           data={parsedAttendanceRecords}
           tableTitle="Attendance"
         />
-      </Container>
+      // </Container>
     );
   } catch (error) {
     console.error("Error in AttendancePage:", error);
     return (
-      <Container width="marginxy">
+      // <Container width="marginxy">
         <div className="p-4 rounded-md bg-red-50 border border-red-200">
           <h2 className="text-lg font-semibold text-red-700 mb-2">Error</h2>
           <p className="text-red-600">
@@ -58,7 +58,7 @@ export default async function AttendancePage() {
               : "An unexpected error occurred while loading attendance records"}
           </p>
         </div>
-      </Container>
+      // </Container>
     );
   }
 }

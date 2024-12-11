@@ -1,7 +1,6 @@
-import { 
-  SidebarProvider,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/custom-ui/app-sidebar"; 
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/custom-ui/app-sidebar";
+import { Container } from "@/components/custom-ui/container";
 
 export default function RootLayout({
   children,
@@ -10,10 +9,13 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <SidebarProvider>
-        <AppSidebar />
-        <main>{children}</main>
-      </SidebarProvider>
+      <Container width="marginy" animate={false}>
+        <SidebarProvider>
+          <AppSidebar />
+
+          <main>{children}</main>
+        </SidebarProvider>
+      </Container>
     </>
   );
 }

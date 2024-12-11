@@ -1,4 +1,4 @@
-import { Container } from "@/components/custom-ui/container";
+// import { Container } from "@/components/custom-ui/container";
 import { paymentColumns } from "@/components/columns/payments-columns"; 
 import { getAllPayments } from "@/app/actions/payment";
 import { CustomDataTable } from "@/components/custom-ui/custom-data-table";
@@ -23,7 +23,7 @@ export default async function PaymentsPage() {
     }));
 
     return (
-      <Container width="marginy" className="w-[100%]">
+      // <Container width="marginy" className="w-[100%]">
         <CustomDataTable
           tableTitle="All Payments"
           pgSize={10}
@@ -32,7 +32,7 @@ export default async function PaymentsPage() {
           showDatePicker={true}
           filters={[{ column: "studentName", placeholder: "Find by Name" }]}
         />
-      </Container>
+      // </Container>
     );
   } else {
     return <div>Error loading Payments</div>;

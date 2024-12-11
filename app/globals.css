@@ -2,12 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   :root {
+    --font-oxanium: 'Oxanium', sans-serif;
+    --font-fira-sans: 'Fira Sans', sans-serif;
     --active: 134, 100%, 27%; 
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -84,13 +82,6 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-firaSans;
   }
-}
-
-.cookie-consent {
-
-  color: hsl(173, 80%, 40%);
-  background-color: hsl(38, 92%, 50%);
-  border-color: hsl(239, 84%, 67%);
 }

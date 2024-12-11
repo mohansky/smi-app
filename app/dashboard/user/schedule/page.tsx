@@ -1,10 +1,10 @@
 // "use client";
 
-import { Container } from "@/components/custom-ui/container";
+// import { Container } from "@/components/custom-ui/container";
 
 export default function Scheduler() {
   return (
-    <Container width="marginxy">
+    // <Container width="marginxy">
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">
           Weekly Scheduler
@@ -15,6 +15,6 @@ export default function Scheduler() {
           width="800"
         ></iframe>
       </div>
-    </Container>
+    // </Container>
   );
 }

@@ -5,7 +5,7 @@ import { students, payments, INSTRUMENTS } from "@/db/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Ban, Guitar, Drum, Piano, IndianRupee } from "lucide-react";
 import { MonthPicker } from "@/components/custom-ui/month-picker";
-import { Container } from "@/components/custom-ui/container";
+// import { Container } from "@/components/custom-ui/container";
 import AddStudentButton from "@/components/buttons/add-student-button";
 import MonthlyStatsLoading from "@/components/skeletons/monthly-stats-skeleton";
 import { Suspense } from "react";
@@ -223,7 +223,7 @@ export default async function MonthlyStatsPage(props: PageProps) {
 
   return (
     <Suspense fallback={<MonthlyStatsLoading />}>
-      <Container width="marginxy" className="mx-10">
+      {/* <Container width="marginxy" className="mx-10"> */}
         <AddStudentButton />
 
         <div className="mb-8">
@@ -256,7 +256,7 @@ export default async function MonthlyStatsPage(props: PageProps) {
             <NoDataCard />
           )}
         </div>
-      </Container>
+      {/* </Container> */}
     </Suspense>
   );
 }

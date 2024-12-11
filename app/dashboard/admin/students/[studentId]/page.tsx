@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getAttendanceRecordsByStudent } from "@/app/actions/attendance";
 import { getPaymentsByStudent } from "@/app/actions/payment";
 import { getStudentById } from "@/app/actions/student";
-import { Container } from "@/components/custom-ui/container";
+// import { Container } from "@/components/custom-ui/container";
 import { studentPaymentColumns } from "@/components/columns/student-payments-columns";
 import { studentAttendanceColumns } from "@/components/columns/student-attendance-columns";
 import StudentDetails from "@/components/custom-ui/stutent-details"; 
@@ -39,7 +39,7 @@ export default async function StudentDetailsPage(props: StudentPageProps) {
 
     return (
       <Suspense fallback={<StudentDetailsLoading />}>
-        <Container width="marginxy" className=" mx-5">
+        {/* <Container width="marginxy" className=" mx-5"> */}
           <div className="grid md:grid-cols-9 gap-4 mb-10">
             <div className="col-span-4">
               <StudentDetails student={student} />
@@ -65,17 +65,17 @@ export default async function StudentDetailsPage(props: StudentPageProps) {
               dateField="date"
             />
           </Card>
-        </Container>
+        {/* </Container> */}
       </Suspense>
     );
   } catch (error) {
     return (
-      <Container width="marginxy">
+      // <Container width="marginxy">
         <div className="text-red-500 p-4 rounded-md bg-red-50">
           Error loading student records:{" "}
           {error instanceof Error ? error.message : "Unknown error occurred"}
         </div>
-      </Container>
+      // </Container>
     );
   }
 }

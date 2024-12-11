@@ -18,18 +18,18 @@ export default async function StudentsPage() {
 
   return (
     <Suspense fallback={<TablesPageLoading />}>
-      <Container width="marginy">
+      {/* <Container width="marginy"> */}
         <CustomDataTable
           columns={studentsColumns}
           data={parsedStudents}
           tableTitle="Students"
           filters={[
             { column: "name", placeholder: "Find by Name" },
-            { column: "email", placeholder: "Find by Email" },
-            { column: "instrument", placeholder: "Find by Instrument" },
+            // { column: "email", placeholder: "Find by Email" },
+            // { column: "instrument", placeholder: "Find by Instrument" },
           ]}
         />
-      </Container>
+      {/* </Container> */}
     </Suspense>
   );
 }

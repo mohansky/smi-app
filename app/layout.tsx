@@ -1,29 +1,13 @@
-import type { Metadata } from "next";
-import { Fira_Sans, Oxanium } from "next/font/google";
 import "./globals.css";
+import type { Metadata } from "next"; 
 import { ThemeProvider } from "next-themes";
-import Footer from "@/components/layout/footer";
-import Menu from "@/components/layout/menu";
 import { options } from "#site/content";
-import AuthProvider from "@/context/auth-provider";
+import { oxanium, firaSans } from "@/app/local-fonts";
 import { Toaster } from "@/components/ui/sonner";
-// import { GoogleTagManager } from '@next/third-parties/google'
+import Menu from "@/components/layout/menu";
+import Footer from "@/components/layout/footer";
+import AuthProvider from "@/context/auth-provider";
 
-const oxanium = Oxanium({
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
-  style: ["normal"],
-  subsets: ["latin"],
-  variable: "--font-oxanium",
-  display: "swap",
-});
-
-const fira_sans = Fira_Sans({
-  weight: ["300", "400", "500", "600", "700", "800"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-fira_sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: `${options.title}`,
@@ -77,11 +61,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning={true}
-      className={`${oxanium.variable} ${fira_sans.variable}`}
+      suppressHydrationWarning
+      className={`${oxanium.variable} ${firaSans.variable}`}
     >
       {/* <GoogleTagManager gtmId="GTM-XYZ" /> */}
-      <body>
+      <body
+        suppressHydrationWarning
+        data-new-gr-c-s-check-loaded={undefined}
+        data-gr-ext-installed={undefined} 
+      >
         <AuthProvider>
           <ThemeProvider
             attribute="class"

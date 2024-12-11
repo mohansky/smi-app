@@ -1,4 +1,4 @@
-import { Container } from "@/components/custom-ui/container";
+// import { Container } from "@/components/custom-ui/container";
 import { getPaymentsByStudent } from "@/app/actions/payment";
 import { paymentByStudentColumns } from "@/components/columns/payments-by-student-columns";
 import { paymentSchema } from "@/lib/validations/payments";
@@ -20,11 +20,11 @@ export default async function PaymentsPage() {
     const studentById = await getStudentByUserEmail(user?.email as string);
     if (!studentById) {
       return (
-        <Container width="marginy">
+        // <Container width="marginy">
           <Heading size="xs" className="text-destructive">
             No student data found for this user. Please contact administrator.
           </Heading>
-        </Container>
+        // </Container>
       );
     }
     const records = await getPaymentsByStudent(studentById.studentId);
@@ -39,18 +39,18 @@ export default async function PaymentsPage() {
     });
 
     return (
-      <Container width="marginy">
+      // <Container width="marginy">
         <CustomDataTable
           columns={paymentByStudentColumns}
           data={parsedPaymentRecords}
           tableTitle="Payments"
         />
-      </Container>
+      // </Container>
     );
   } catch (error) {
     console.error("Error in AttendancePage:", error);
     return (
-      <Container width="marginxy">
+      // <Container width="marginxy">
         <div className="p-4 rounded-md bg-red-50 border border-red-200">
           <h2 className="text-lg font-semibold text-red-700 mb-2">Error</h2>
           <p className="text-red-600">
@@ -59,7 +59,7 @@ export default async function PaymentsPage() {
               : "An unexpected error occurred while loading attendance records"}
           </p>
         </div>
-      </Container>
+      // </Container>
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Container } from "@/components/custom-ui/container";
+// import { Container } from "@/components/custom-ui/container";
 import { addStudentsAttendancePaymentsColumns } from "@/components/columns/add-students-attendance-payments-columns";
 import { getStudents } from "@/app/actions/student";
 import { StudentFormValues, studentSchema } from "@/lib/validations/student";
@@ -15,13 +15,13 @@ export default async function PaymentsPage() {
   ) as StudentFormValues[];
 
   return (
-    <Container width="marginy">
+    // <Container width="marginy">
       <CustomDataTable
         columns={addStudentsAttendancePaymentsColumns}
         data={parsedStudents}
         tableTitle="Add Fees and Attendance"
         filters={[{ column: "name", placeholder: "Find by Name" }]}
       />
-    </Container>
+    // </Container>
   );
 }

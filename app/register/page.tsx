@@ -1,6 +1,7 @@
+"use client";
 import { RegisterForm } from "@/components/forms/register-form";
 import { Container } from "@/components/custom-ui/container";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,8 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+// import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   return (
@@ -24,7 +26,7 @@ export default function LoginPage() {
           <CardContent className="space-y-6">
             <RegisterForm />
 
-            <div className="relative">
+            {/* <div className="relative">
               <Separator />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="bg-background px-2 text-muted-foreground text-xs uppercase">
@@ -34,10 +36,14 @@ export default function LoginPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => signIn("google")}
+              >
                 Google
               </Button>
-            </div>
+            </div> */}
 
             <div className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}
