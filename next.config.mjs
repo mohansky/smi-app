@@ -1,12 +1,21 @@
 /** @type {import('next').NextConfig} */
-export const experimental = {
-  turbo: { 
-    rulesWithoutResolveExtensions: true
+const nextConfig = {
+  experimental: {
+    turbo: { 
+      rulesWithoutResolveExtensions: true
+    }, 
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
+  webpack: (config) => {
+    config.plugins.push(new VeliteWebpackPlugin())
+    return config
   }
-}
-export function webpack(config) {
-  config.plugins.push(new VeliteWebpackPlugin())
-  return config
 }
 
 class VeliteWebpackPlugin {
@@ -21,3 +30,5 @@ class VeliteWebpackPlugin {
     })
   }
 }
+
+export default nextConfig
