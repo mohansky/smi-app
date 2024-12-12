@@ -10,7 +10,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { SidebarTrigger } from "./sidebar-trigger";
 import { useSession } from "next-auth/react";
 import {
   DropdownMenu,
@@ -22,7 +21,7 @@ import { ChevronUp, User2 } from "lucide-react";
 import { SignOutButton } from "../buttons/sign-out-button";
 import { adminMenu, userMenu } from "@/data/sidebar-menu";
 import { UserProfile } from "../user-profile";
-import { Skeleton } from "../ui/skeleton";
+// import { Skeleton } from "../ui/skeleton";
 
 interface Item {
   icon: React.ComponentType | string;
@@ -36,21 +35,18 @@ function SidebarIcon({ item }: { item: Item }) {
 export function AppSidebar() {
   const { data: session, status } = useSession();
 
-  if (status === "loading") {
-    return <Skeleton className="h-[80vh] w-44" />;
-    // return <div>Sidebar is Loading...</div>;
-  }
+  // if (status === "loading") {
+  //   return <Skeleton className="h-[70vh] w-72 md:w-64" />;
+  // }
 
   if (status === "unauthenticated") {
-    return <div>Please log in</div>;
+    return <div>Please log in.</div>;
   }
 
   const menu = session?.user?.role === "ADMIN" ? adminMenu : userMenu;
 
   return (
-    <div className=" h-[80vh] my-auto">
-      
-      <SidebarTrigger />
+    <div className="h-[80vh] my-auto">
       <Sidebar
         variant="floating"
         collapsible="offcanvas"

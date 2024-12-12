@@ -165,7 +165,7 @@ export function CustomDataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full">
+    <div className="overflow-x-auto sm:overflow-visible">
       <Heading size="sm" className="mb-5">
         {tableTitle}
       </Heading>
@@ -241,8 +241,8 @@ export function CustomDataTable<TData, TValue>({
         </div>
       )}
 
-      <div className="rounded-md border  overflow-x-scroll">
-        <Table>
+      <div className="rounded-md border  overflow-x-auto">
+        <Table className="min-w-full border-collapse border">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

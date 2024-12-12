@@ -10,21 +10,12 @@ export function SidebarTrigger({
 }: {
   className?: string;
 }) {
-  const { toggleSidebar } = useSidebar();
-
-  function handleToggle() {
-    try {
-      toggleSidebar();
-    } catch (error) {
-      console.error("Error toggling sidebar:", error);
-    }
-  }
+  const { toggleSidebar } = useSidebar(); 
 
   return (
     <Button
       aria-label="Open Sidebar"
-      // onClick={toggleSidebar}
-      onClick={handleToggle}
+      onClick={toggleSidebar} 
       data-sidebar="trigger"
       variant="ghost"
       size="icon"

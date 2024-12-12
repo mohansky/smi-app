@@ -120,7 +120,10 @@ export const studentsColumns: ColumnDef<StudentFormValues>[] = [
     accessorKey: "viewStudent",
     header: "View Student",
     cell: ({ row }) => (
-      <Link className="capitalize" href={`/dashboard/admin/students/${row.getValue("id")}`}>
+      <Link
+        className="capitalize"
+        href={`/dashboard/admin/students/${row.getValue("id")}`}
+      >
         <Button size="sm">
           {/* <EyeIcon className="mr-1 h-4 w-4" /> */}
           View
@@ -134,7 +137,7 @@ export const studentsColumns: ColumnDef<StudentFormValues>[] = [
     cell: ({ row }) => {
       const { id, name } = row.original;
       if (typeof id !== "number") return null;
-      return ( 
+      return (
         <DeleteButton
           id={id}
           identifier={name}
