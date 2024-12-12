@@ -1,8 +1,9 @@
-// import { Container } from "@/components/custom-ui/container";
 import { attendanceColumns } from "@/components/columns/attendance-columns";
 import { getAttendanceRecords } from "@/app/actions/attendance";
 import { attendanceSchema } from "@/lib/validations/attendance";
 import CustomDataTable from "@/components/custom-ui/custom-data-table";
+import StudentDetailsLoading from "@/components/skeletons/student-details-skeleton";
+import { Suspense } from "react";
 
 export default async function AttendancePage() {
   try {
@@ -18,31 +19,28 @@ export default async function AttendancePage() {
     });
 
     return (
-      
-      // <Container width="marginy">
-        <CustomDataTable
-          tableTitle="Attendance"
-          pgSize={10}
-          columns={attendanceColumns}
-          data={parsedAttendanceRecords}
-          showDatePicker={true}
-          filters={[{ column: "studentName", placeholder: "Find by Name" }]}
-        />
-      // {/* </Container> */}
+      <Suspense fallback={<StudentDetailsLoading />}>
+        <div className="w-[98vw] md:w-[75vw] mb-10">
+          <CustomDataTable
+            tableTitle="Attendance"
+            pgSize={10}
+            columns={attendanceColumns}
+            data={parsedAttendanceRecords}
+            showDatePicker={true}
+            filters={[{ column: "studentName", placeholder: "Find by Name" }]}
+          />
+        </div>
+      </Suspense>
     );
   } catch (error) {
     console.error("Error in AttendancePage:", error);
     return (
-      // <Container width="marginxy">
-        <div className="p-4 rounded-md bg-red-50 border border-red-200">
-          <h2 className="text-lg font-semibold text-red-700 mb-2">Error</h2>
-          <p className="text-red-600">
-            {error instanceof Error
-              ? error.message
-              : "An unexpected error occurred while loading attendance records"}
-          </p>
-        </div>
-      // </Container>
+      <div>
+        Error loading attendance records:{" "}
+        {error instanceof Error
+          ? error.message
+          : "An unexpected error occurred while loading attendance records"}
+      </div>
     );
   }
 }

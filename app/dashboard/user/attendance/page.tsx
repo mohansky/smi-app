@@ -7,6 +7,8 @@ import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getStudentByUserEmail } from "@/app/actions/users";
 import CustomDataTable from "@/components/custom-ui/custom-data-table";
 import { Heading } from "@/components/custom-ui/heading";
+import StudentDetailsLoading from "@/components/skeletons/student-details-skeleton";
+import { Suspense } from "react";
 
 export default async function AttendancePage() {
   const session = await getServerSession(options);
@@ -20,11 +22,9 @@ export default async function AttendancePage() {
     const studentById = await getStudentByUserEmail(user?.email as string);
     if (!studentById) {
       return (
-        // <Container width="marginy">
-          <Heading size="xs" className="text-destructive">
-            No student data found for this user. Please contact administrator.
-          </Heading>
-        // </Container>
+        <Heading size="xs" className="text-destructive">
+          No student data found for this user. Please contact administrator.
+        </Heading>
       );
     }
     const records = await getAttendanceRecordsByStudent(studentById.studentId);
@@ -38,27 +38,25 @@ export default async function AttendancePage() {
     });
 
     return (
-      // <Container width="marginy">
-        <CustomDataTable
-          columns={attendanceByStudentColumns}
-          data={parsedAttendanceRecords}
-          tableTitle="Attendance"
-        />
-      // </Container>
+      <Suspense fallback={<StudentDetailsLoading />}>
+        <div className="w-[98vw] md:w-[75vw] mb-10">
+          <CustomDataTable
+            columns={attendanceByStudentColumns}
+            data={parsedAttendanceRecords}
+            tableTitle="Attendance"
+          />
+        </div>
+      </Suspense>
     );
   } catch (error) {
     console.error("Error in AttendancePage:", error);
     return (
-      // <Container width="marginxy">
-        <div className="p-4 rounded-md bg-red-50 border border-red-200">
-          <h2 className="text-lg font-semibold text-red-700 mb-2">Error</h2>
-          <p className="text-red-600">
-            {error instanceof Error
-              ? error.message
-              : "An unexpected error occurred while loading attendance records"}
-          </p>
-        </div>
-      // </Container>
+      <div>
+        Error loading attendance records:{" "}
+        {error instanceof Error
+          ? error.message
+          : "An unexpected error occurred while loading attendance records"}
+      </div>
     );
   }
 }

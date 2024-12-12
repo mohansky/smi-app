@@ -1,10 +1,11 @@
 import { getServerSession } from "next-auth/next";
 import { getStudentByUserEmail } from "@/app/actions/users";
 import { getStudentById } from "@/app/actions/student";
-import { options } from "@/app/api/auth/[...nextauth]/options";
-// import { Container } from "@/components/custom-ui/container";
-import StudentDetails from "@/components/custom-ui/stutent-details";
+import { options } from "@/app/api/auth/[...nextauth]/options"; 
 import { Heading } from "@/components/custom-ui/heading";
+import { Suspense } from "react";
+import StudentDetails from "@/components/custom-ui/stutent-details";
+import StudentDetailsLoading from "@/components/skeletons/student-details-skeleton";
 
 export default async function StudentDetailsPage() {
   const session = await getServerSession(options);
@@ -17,13 +18,10 @@ export default async function StudentDetailsPage() {
 
   const studentId = studentById?.studentId;
   if (studentId === undefined) {
-    // throw new Error("No student ID found");
     return (
-      // <Container width="marginxy">
-        <Heading size="xs" className="text-destructive">
+      <Heading size="xs" className="text-destructive">
         No student data found for this user. Please contact administrator.
-        </Heading>
-      // </Container>
+      </Heading>
     );
   }
   const studentResponse = await getStudentById(studentId);
@@ -34,8 +32,10 @@ export default async function StudentDetailsPage() {
   const student = studentResponse.student;
 
   return (
-    // <Container width="marginxy">
-      <StudentDetails student={student} />
-    // </Container>
+    <Suspense fallback={<StudentDetailsLoading />}>
+      <div className="w-[98vw] md:w-[75vw] mb-10">
+        <StudentDetails student={student} />
+      </div>
+    </Suspense>
   );
 }

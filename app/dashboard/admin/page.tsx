@@ -222,8 +222,8 @@ export default async function MonthlyStatsPage(props: PageProps) {
   const monthDisplay = format(new Date(selectedMonth), "MMMM yyyy");
 
   return (
-    <Suspense fallback={<MonthlyStatsLoading />}>
-      {/* <Container width="marginxy" className="mx-10"> */}
+    <Suspense fallback={<MonthlyStatsLoading />}> 
+      <div className="w-[90vw] md:w-[75vw] my-10">
         <AddStudentButton />
 
         <div className="mb-8">
@@ -256,7 +256,7 @@ export default async function MonthlyStatsPage(props: PageProps) {
             <NoDataCard />
           )}
         </div>
-      {/* </Container> */}
+      </div> 
     </Suspense>
   );
 }

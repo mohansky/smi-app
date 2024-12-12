@@ -68,7 +68,8 @@ export default function RootLayout({
       <body
         suppressHydrationWarning
         data-new-gr-c-s-check-loaded={undefined}
-        data-gr-ext-installed={undefined} 
+        data-gr-ext-installed={undefined}
+        // className="overflow-hidden"
       >
         <AuthProvider>
           <ThemeProvider
@@ -78,7 +79,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Menu />
-            {children}
+            <main>{children}</main>
             <Footer />
           </ThemeProvider>
         </AuthProvider>
