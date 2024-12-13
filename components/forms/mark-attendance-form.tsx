@@ -27,18 +27,17 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { AttendanceFormState } from "@/types";
 import { DialogClose, DialogFooter } from "../ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export const AttendanceForm = ({
   studentId,
   submitAttendanceAction,
-  onSuccess,
 }: {
   studentId: number;
   submitAttendanceAction: (
     prevState: AttendanceFormState,
     data: FormData
   ) => Promise<AttendanceFormState>;
-  onSuccess: () => void;
 }) => {
   const [state, formAction, isPending] = useActionState(
     submitAttendanceAction,
@@ -65,13 +64,6 @@ export const AttendanceForm = ({
   });
 
   useEffect(() => {
-    if (state.status === "success" && !state.data?.issues) {
-      // form.reset();
-      onSuccess();
-    }
-  }, [state, form, onSuccess]);
-
-  useEffect(() => {
     const subscription = form.watch((values) => {
       form.trigger();
       return values;
@@ -79,6 +71,19 @@ export const AttendanceForm = ({
 
     return () => subscription.unsubscribe();
   }, [form]);
+
+  if (state.status === "success") {
+    return (
+      <Alert variant="default">
+        <AlertTitle className="text-active text-xl">
+          Attendance added Successfully!
+        </AlertTitle>
+        <AlertDescription className="text-muted-foreground text-xs">
+          Attendance has been recorded in the system.
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <Card className="w-full mx-auto">

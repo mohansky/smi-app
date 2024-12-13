@@ -16,14 +16,15 @@ export const addStudentsAttendancePaymentsColumns: ColumnDef<StudentFormValues>[
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="w-24"
           >
-            ID No.
+            Student ID
             <CaretSortIcon className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("id")}</div>
+        <div className="capitalize w-10">{row.getValue("id")}</div>
       ),
     },
     {

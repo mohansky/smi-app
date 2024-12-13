@@ -26,16 +26,15 @@ import { useEffect } from "react";
 import { AddStudentFormState } from "@/types";
 import { z } from "zod";
 import { DialogClose, DialogFooter } from "../ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export const AddStudentForm = ({
-  addStudent,
-  onSuccess,
+  addStudent, 
 }: {
   addStudent: (
     prevState: AddStudentFormState,
     data: FormData
-  ) => Promise<AddStudentFormState>;
-  onSuccess: () => void;
+  ) => Promise<AddStudentFormState>; 
 }) => {
   const [state, formAction, isPending] = useActionState(addStudent, {
     status: "idle",
@@ -63,12 +62,6 @@ export const AddStudentForm = ({
   });
 
   useEffect(() => {
-    if (state.status === "success" && !state.data?.issues) {
-      onSuccess();
-    }
-  }, [state, form, onSuccess]);
-
-  useEffect(() => {
     const subscription = form.watch((values) => {
       form.trigger();
       return values;
@@ -76,6 +69,19 @@ export const AddStudentForm = ({
 
     return () => subscription.unsubscribe();
   }, [form]);
+
+  if (state.status === "success") {
+    return (
+      <Alert variant="default">
+        <AlertTitle className="text-active text-xl">
+          Student Added Successfully!
+        </AlertTitle>
+        <AlertDescription className="text-muted-foreground text-xs">
+          Student details have been recorded in the system.
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <Card className="w-full mx-auto">

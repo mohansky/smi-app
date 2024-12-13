@@ -7,14 +7,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Button } from "../ui/button";
-import { toast } from "sonner";
+import { Button } from "../ui/button"; 
 import { AttendanceForm } from "../forms/mark-attendance-form";
 import { submitAttendanceAction } from "@/app/actions/attendance";
 
-export default function MarkAttendanceButton({ id }: { id: number }) {
+export default function MarkAttendanceButton({ id, className }: { id: number, className?: string }) {
   return (
-    <div className="flex justify-end">
+    <div className={className}>
       <Dialog>
         <DialogTrigger asChild>
           <Button title="Mark Attendance" size="sm">
@@ -24,12 +23,11 @@ export default function MarkAttendanceButton({ id }: { id: number }) {
         </DialogTrigger>
         <DialogContent className="sm:max-w-6xl max-h-[95vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Mark Attendance</DialogTitle>
+            <DialogTitle className="sr-only">Mark Attendance</DialogTitle>
           </DialogHeader>
           <AttendanceForm
             studentId={id}
             submitAttendanceAction={submitAttendanceAction}
-            onSuccess={() => toast.success("Student added successfully!")}
           />
         </DialogContent>
       </Dialog>

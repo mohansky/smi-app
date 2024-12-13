@@ -10,16 +10,11 @@ import {
 import { Button } from "../ui/button";
 import { PlusIcon } from "lucide-react";
 import AddStudentForm from "../forms/add-student-form";
-import { addStudent } from "@/app/actions/student";
-import { toast } from "sonner";
+import { addStudent } from "@/app/actions/student"; 
 
 export default function AddStudentButton() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
+ 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -30,14 +25,10 @@ export default function AddStudentButton() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-6xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Student</DialogTitle>
+          <DialogTitle className="sr-only">Add New Student</DialogTitle>
         </DialogHeader>
         <AddStudentForm
-          addStudent={addStudent}
-          onSuccess={() => {
-            toast.success("Student added successfully!");
-            handleClose(); // Close the dialog on success
-          }}
+          addStudent={addStudent} 
         />
       </DialogContent>
     </Dialog>
