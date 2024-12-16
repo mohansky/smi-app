@@ -1,9 +1,12 @@
+import { INSTRUMENTS } from "@/db/schema";
 import { demoFormSchema } from "@/lib/demoFormValidation";
 import { formSchema } from "@/lib/formValidation";
 import { attendanceSchema } from "@/lib/validations/attendance";
+import { expenseSchema } from "@/lib/validations/expenses";
 import { paymentSchema } from "@/lib/validations/payments";
 import { StudentFormValues, studentSchema } from "@/lib/validations/student";
 import { UserLoginSchema } from "@/lib/validations/user";
+import { Drum, Guitar, Piano } from "lucide-react";
 import { z } from "zod";
 
 export interface StudentPageProps {
@@ -80,9 +83,6 @@ export interface AddStudentFormState {
     message: string;
     code?: string;
   } | null;
-  // // Additional metadata
-  // timestamp?: number;
-  // attempts?: number;  // Number of submission attempts
 }
 
 export interface FullActionState {
@@ -90,16 +90,13 @@ export interface FullActionState {
   data?: {
     id?: string;
     message?: string | string[];
-    user?: z.infer<typeof formSchema>;
+    user?: z.infer<typeof expenseSchema>;
     issues?: string[];
   };
   error?: {
     message: string;
     code?: string;
   } | null;
-  // // Additional metadata
-  // timestamp?: number;
-  // attempts?: number;  // Number of submission attempts
 }
 
 export interface DemoFormState {
@@ -158,16 +155,13 @@ export interface PaymentFormState {
   } | null;
 }
 
-export interface LoginFormState {
-  // studentId: number;
+export interface ExpenseFormState { 
   status: "idle" | "submitting" | "success" | "error";
-  redirectUrl?: string;
 
   data?: {
     id?: string;
     message?: string | string[];
-    user?: z.infer<typeof UserLoginSchema>;
-    // user?: unknown;
+    user?: z.infer<typeof expenseSchema>;
     issues?: string[];
   };
 
@@ -175,4 +169,62 @@ export interface LoginFormState {
     message: string;
     code?: string;
   } | null;
+}
+
+export interface LoginFormState {
+  status: "idle" | "submitting" | "success" | "error";
+  redirectUrl?: string;
+
+  data?: {
+    id?: string;
+    message?: string | string[];
+    user?: z.infer<typeof UserLoginSchema>;
+    issues?: string[];
+  };
+
+  error?: {
+    message: string;
+    code?: string;
+  } | null;
+}
+
+
+export interface PageProps {
+  searchParams: Promise<{ month?: string }>;
+}
+
+export type InstrumentType = (typeof INSTRUMENTS)[keyof typeof INSTRUMENTS];
+
+// Update INSTRUMENT_ICONS to match the case of INSTRUMENTS enum
+export const INSTRUMENT_ICONS: Record<InstrumentType, React.ElementType> = {
+  guitar: Guitar,
+  drums: Drum,
+  keyboard: Piano,
+};
+
+export interface InstrumentCount {
+  instrument: string;
+  count: number;
+}
+
+export interface Stats {
+  activeStudents: number;
+  totalPayments: number;
+  totalExpenses: number;
+  instrumentBreakdown: InstrumentCount[];
+}
+
+export interface CombinedStats {
+  monthly: Stats;
+  yearly: Stats;
+  hasData: boolean;
+}
+
+export interface InstrumentBreakdownChartProps {
+  monthly: InstrumentCount[];
+}
+
+export interface ChartDataItem {
+  name: string;
+  value: number;
 }

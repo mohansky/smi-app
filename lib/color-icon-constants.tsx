@@ -61,3 +61,14 @@ export const getGrade = (grade: Grade) => {
       return "Grade 1";
   }
 };
+
+
+// Color palette for the chart
+export const chartColors = [
+  "#0088FE", // Blue
+  "#00C49F", // Teal
+  "#FFBB28", // Yellow
+  "#FF8042", // Orange
+  "#8884D8", // Purple
+  "#FF6384", // Pink
+];

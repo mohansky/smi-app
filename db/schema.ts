@@ -66,6 +66,17 @@ export const students = pgTable("students", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// User records
+export const users = pgTable("users", {
+  id: uuid('id').primaryKey(),
+  name: varchar('name', { length: 50 }),
+  email: varchar('email', { length: 255 }).unique(),
+  password: varchar('password', { length: 255 }),
+  role: varchar('role', { enum: ['USER', 'ADMIN'] }).default('USER'),
+  isVerified: boolean('is_verified').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 // Attendance records
 export const attendance = pgTable("attendance", {
   id: serial("id").primaryKey(),
@@ -102,15 +113,33 @@ export const payments = pgTable("payments", {
 
 export type InsertPayment = typeof payments.$inferInsert;
 
-export const users = pgTable("users", {
-  id: uuid('id').primaryKey(),
-  name: varchar('name', { length: 50 }),
-  email: varchar('email', { length: 255 }).unique(),
-  password: varchar('password', { length: 255 }),
-  role: varchar('role', { enum: ['USER', 'ADMIN'] }).default('USER'),
-  isVerified: boolean('is_verified').default(false),
-  createdAt: timestamp('created_at').defaultNow(),
+
+// Expense records
+export const expenses = pgTable("expenses", {
+  id: serial("id").primaryKey(),
+  date: timestamp("date").notNull(),
+  amount: numeric("amount").notNull(),
+  description: varchar("description").notNull(),
+  category: varchar("category", {
+    enum: ["UTILITIES", "RENT", "MISC"],
+  }).default("MISC").notNull(),
+  expenseStatus: varchar("expense_status", { 
+    enum: ["DUE", "PAID"] 
+  }).default("PAID").notNull(),
+  paymentMethod: varchar("payment_method", {
+    enum: ["CASH", "CARD"],
+  }).default("CASH").notNull(),
+  transactionId: varchar("transaction_id"),
+  notes: varchar("notes"),
+  created_at: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updated_at: timestamp("updated_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
+
+export type InsertExpense = typeof expenses.$inferInsert;
 
 
 // Relations

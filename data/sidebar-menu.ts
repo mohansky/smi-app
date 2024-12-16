@@ -4,7 +4,8 @@ import {
   CalendarDays,
   Calendar1,
   LayoutDashboard,
-  PlusIcon
+  PlusIcon,
+  ReceiptIndianRupee
 } from "lucide-react";
 
 export const adminMenu: {
@@ -44,9 +45,15 @@ export const adminMenu: {
     icon: IndianRupee,
   },
   {
+    text: "Expenses",
+    url: "/dashboard/admin/expenses",
+    id: 6,
+    icon: ReceiptIndianRupee,
+  },
+  {
     text: "Schedule",
     url: "/dashboard/admin/schedule",
-    id: 6,
+    id: 7,
     icon: CalendarDays,
   },
 ];
