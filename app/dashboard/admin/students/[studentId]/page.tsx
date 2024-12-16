@@ -44,7 +44,7 @@ export default async function StudentDetailsPage(props: StudentPageProps) {
               <StudentDetails student={student} />
             </div>
             <Card className="p-4 col-span-5">
-              <MarkAttendanceButton id={student.id as number} />
+              <MarkAttendanceButton id={student.id as number} className="flex justify-end"/>
               <CustomDataTable
                 tableTitle="Attendance"
                 columns={studentAttendanceColumns}
@@ -55,7 +55,7 @@ export default async function StudentDetailsPage(props: StudentPageProps) {
             </Card>
           </div>
           <Card className="p-4">
-            <AddPaymentButton id={student.id as number} />
+            <AddPaymentButton id={student.id as number} className="flex justify-end"/>
             <CustomDataTable
               tableTitle="Payments"
               columns={studentPaymentColumns}

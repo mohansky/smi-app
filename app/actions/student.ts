@@ -45,9 +45,10 @@ export async function addStudent(
 
     const data = validationResult.data;
 
-    // Check for existing student by email
+    // Check for existing student by email and phone
     const existingStudent = await db.query.students.findFirst({
-      where: (students, { eq }) => eq(students.email, data.email),
+      where: (students, { eq, and }) =>
+        and(eq(students.email, data.email), eq(students.phone, data.phone)),
     });
 
     if (existingStudent) {
@@ -290,3 +291,89 @@ export async function getStudentById(studentId: number): Promise<{
     };
   }
 }
+
+// export async function getCombinedStats(month: string): Promise<CombinedStats> {
+//   const selectedDate = new Date(month);
+//   const monthStart = startOfMonth(selectedDate);
+//   const monthEnd = endOfMonth(selectedDate);
+//   const yearStart = startOfMonth(subYears(selectedDate, 1));
+
+//   // Get active students and their instruments for the month
+//   const activeStudents = await db
+//     .select({
+//       id: students.id,
+//       instrument: students.instrument,
+//     })
+//     .from(students)
+//     .where(sql`is_active = true AND joining_date <= ${monthEnd}`);
+
+//   // Get active students for the past year
+//   const yearlyActiveStudents = await db
+//     .select({
+//       id: students.id,
+//       instrument: students.instrument,
+//     })
+//     .from(students)
+//     .where(
+//       sql`is_active = true AND joining_date <= ${monthEnd} AND joining_date >= ${yearStart}`
+//     );
+
+//   // Get monthly payments
+//   const monthlyPayments = await db
+//     .select({
+//       total: sql`SUM(amount)::numeric`,
+//     })
+//     .from(payments).where(sql`
+//         date >= ${monthStart} AND
+//         date <= ${monthEnd} AND
+//         payment_status = 'PAID'
+//       `);
+
+//   // Get yearly payments
+//   const yearlyPayments = await db
+//     .select({
+//       total: sql`SUM(amount)::numeric`,
+//     })
+//     .from(payments).where(sql`
+//         date >= ${yearStart} AND
+//         date <= ${monthEnd} AND
+//         payment_status = 'PAID'
+//       `);
+
+//   // Calculate instrument breakdowns
+//   const monthlyInstrumentCounts = Object.values(INSTRUMENTS).map(
+//     (instrument) => ({
+//       instrument,
+//       count: activeStudents.filter(
+//         (student) => student.instrument === instrument
+//       ).length,
+//     })
+//   );
+
+//   const yearlyInstrumentCounts = Object.values(INSTRUMENTS).map(
+//     (instrument) => ({
+//       instrument,
+//       count: yearlyActiveStudents.filter(
+//         (student) => student.instrument === instrument
+//       ).length,
+//     })
+//   );
+
+//   const hasData =
+//     activeStudents.length > 0 || Number(monthlyPayments[0]?.total) > 0;
+
+//   return {
+//     monthly: {
+//       activeStudents: activeStudents.length,
+//       totalPayments: Number(monthlyPayments[0]?.total || 0),
+//       totalExpenses: Number(monthlyExpenses[0]?.total || 0),
+//       instrumentBreakdown: monthlyInstrumentCounts,
+//     },
+//     yearly: {
+//       activeStudents: yearlyActiveStudents.length,
+//       totalPayments: Number(yearlyPayments[0]?.total || 0),
+//       instrumentBreakdown: yearlyInstrumentCounts,
+//     },
+//     hasData,
+//   };
+// }

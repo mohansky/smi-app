@@ -1,6 +1,6 @@
 import { Heading } from "@/components/custom-ui/heading";
 import StudentDetailsLoading from "@/components/skeletons/student-details-skeleton";
-import { UserProfile } from "@/components/user-profile";
+import { UserProfile } from "@/components/custom-ui/user-profile";
 import React, { Suspense } from "react";
 
 export default function Dashboard() {
