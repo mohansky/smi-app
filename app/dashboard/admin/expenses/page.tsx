@@ -13,7 +13,6 @@ export default async function ExpensesPage() {
     category: "ALL",
   });
 
-  console.log("Expenses Page Result:", result);
   if (result.expenses) {
     const transformedExpenses = result.expenses.map((expense) => ({
       ...expense,
