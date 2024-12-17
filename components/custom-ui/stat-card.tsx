@@ -32,7 +32,7 @@ export function StatCard({
             {subtitle}
           </Heading>
         </div> 
-        <Heading size="xxxs" className="border-t border-muted text-xs text-muted-foreground">
+        <Heading size="xxxs" className="text-xs text-muted-foreground">
           <span>
             Yearly Total: {" "} 
             {title.includes("Payments") || title.includes("Expenses")
