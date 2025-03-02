@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 import { getAttendanceRecordsByStudent } from "@/app/actions/attendance";
 import { getPaymentsByStudent } from "@/app/actions/payment";
-import { getStudentById } from "@/app/actions/student";
-// import { Container } from "@/components/custom-ui/container";
+import { getStudentById } from "@/app/actions/student"; 
 import { studentPaymentColumns } from "@/components/columns/student-payments-columns";
 import { studentAttendanceColumns } from "@/components/columns/student-attendance-columns";
 import StudentDetails from "@/components/custom-ui/stutent-details";
@@ -39,11 +38,11 @@ export default async function StudentDetailsPage(props: StudentPageProps) {
     return (
       <Suspense fallback={<StudentDetailsLoading />}>
         <div className="w-[98vw] md:w-[75vw] mb-10">
-          <div className="grid md:grid-cols-9 gap-4 mb-10">
-            <div className="p-4 col-span-4">
+          <div className="grid md:grid-cols-2 gap-4 mb-10">
+            {/* <div className="p-0"> */}
               <StudentDetails student={student} />
-            </div>
-            <Card className="p-4 col-span-5">
+            {/* </div> */}
+            <Card className="p-4">
               <MarkAttendanceButton id={student.id as number} className="flex justify-end"/>
               <CustomDataTable
                 tableTitle="Attendance"

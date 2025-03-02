@@ -1,14 +1,14 @@
 import { ContactFormEmailTemplate } from "@/components/emails/contact-form-email-template";
 import { formSchema } from "@/lib/formValidation";
-import { FullActionState } from "@/types";
+import { ActionState } from "@/types";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const onFormAction = async (
-  prevState: FullActionState,
+  prevState: ActionState,
   formData: FormData
-): Promise<FullActionState> => {
+): Promise<ActionState> => {
   "use server";
   const data = Object.fromEntries(formData);
   const parsed = formSchema.safeParse(data);
@@ -27,21 +27,21 @@ export const onFormAction = async (
       }),
     });
     return {
+      status: "success",
       data: {
         message: "Form submitted. Thank you for your interest.",
         user: parsed.data,
         issues: undefined,
       },
-      status: "success",
     };
   } else {
     return {
+      status: "error",
       data: {
         message: parsed.error.issues.map((issue) => issue.message),
         issues: parsed.error.issues.map((issue) => issue.message),
         user: undefined,
       },
-      status: "error",
     };
   }
 };

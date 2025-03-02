@@ -5,22 +5,6 @@ import { DemoFormState } from "@/types";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// export const onDemoFormAction = async (
-//   prevState: {
-//     message: string;
-//     user?: z.infer<typeof demoFormSchema>;
-//     issues?: string[];
-//   },
-//   formData: FormData
-// ) => {
-//   "use server";
-
-// export const onDemoFormAction = async (
-//   prevState: DemoFormState,
-//   formData: FormData
-// ): Promise<DemoFormState> => {
-//   "use server";
-
 export const onDemoFormAction = async (
   prevState: DemoFormState,
   formData: FormData

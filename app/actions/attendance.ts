@@ -4,8 +4,10 @@ import { attendance, students } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq, and, desc, sql, InferInsertModel } from "drizzle-orm";
 import { ActionState, AttendanceFormState } from "@/types";
-import { z } from "zod";
-import { attendanceSchema } from "@/lib/validations/attendance";
+import {
+  AttendanceFormValues,
+  attendanceSchema,
+} from "@/lib/validations/attendance";
 
 export async function submitAttendanceAction(
   prevState: AttendanceFormState,
@@ -22,17 +24,15 @@ export async function submitAttendanceAction(
     };
 
     const parsedData = attendanceSchema.safeParse(rawAttendanceFormData);
- 
+
     if (!parsedData.success) {
       console.log("Validation Errors:", parsedData.error.errors);
       return {
         studentId,
         status: "error",
         data: {
-          issues: parsedData.error.errors.map((error) => {
-            console.log(`Error Path: ${error.path}, Message: ${error.message}`);
-            return error.message;
-          }),
+          message: `Error occurred while submitting attendance record: ${parsedData.error.errors[0].message}`,
+          issues: [parsedData.error.errors[0].message],
         },
       };
     }
@@ -46,13 +46,14 @@ export async function submitAttendanceAction(
           eq(attendance.date, parsedData.data.date.toISOString().split("T")[0])
         )
       )
-      .limit(1); 
+      .limit(1);
 
     if (existingRecord.length > 0) {
       return {
         studentId,
         status: "error",
         data: {
+          message: `An attendance record already exists for this student on this date.`,
           issues: [
             "An attendance record already exists for this student on this date.",
           ],
@@ -75,7 +76,9 @@ export async function submitAttendanceAction(
       studentId,
       status: "success",
       data: {
-        message: `Attendance record added successfully for ${parsedData.data.date.toISOString().split("T")[0]}`,
+        message: `Attendance record added successfully for ${
+          parsedData.data.date.toISOString().split("T")[0]
+        }`,
       },
     };
   } catch (error) {
@@ -84,27 +87,41 @@ export async function submitAttendanceAction(
       studentId,
       status: "error",
       data: {
+        message: "An unexpected error occurred. Please try again.",
         issues: ["An unexpected error occurred. Please try again."],
       },
     };
   }
 }
 
-export async function getAttendanceRecords() {
-  const records = await db
-    .select({
-      id: attendance.id,
-      studentId: attendance.studentId,
-      studentName: students.name,
-      date: attendance.date,
-      status: attendance.status,
-      notes: attendance.notes,
-    })
-    .from(attendance)
-    .leftJoin(students, eq(attendance.studentId, students.id))
-    .orderBy(desc(attendance.date));
+export async function getAttendanceRecords(): Promise<{
+  attendance?: AttendanceFormValues[];
+  error?: string;
+}> {
+  try {
+    const rawRecords = await db
+      .select({
+        id: attendance.id,
+        studentId: attendance.studentId,
+        studentName: students.name,
+        date: attendance.date,
+        status: attendance.status,
+        notes: attendance.notes,
+      })
+      .from(attendance)
+      .leftJoin(students, eq(attendance.studentId, students.id))
+      .orderBy(desc(attendance.date));
 
-  return records;
+    // Use Zod to validate and transform the records directly
+    const formattedRecords = rawRecords.map((record) =>
+      attendanceSchema.parse(record)
+    );
+
+    return { attendance: formattedRecords };
+  } catch (error) {
+    console.error("Failed to fetch attendance records:", error);
+    return { error: "Failed to fetch attendance records" };
+  }
 }
 
 export async function getAttendanceRecordsByStudent(studentId: number) {
@@ -130,39 +147,45 @@ export async function getAttendanceRecordsByStudent(studentId: number) {
     return records;
   } catch (error) {
     console.error("Error fetching attendance records:", error);
-    return [];
+    return []; 
   }
 }
 
 export async function deleteAttendanceRecord(id: number): Promise<ActionState> {
   try {
-    // Check if the record exists before trying to delete
     const existingRecord = await db.query.attendance.findFirst({
       where: eq(attendance.id, id),
     });
 
     if (!existingRecord) {
       return {
-        message: `Attendance record with ID ${id} not found`,
+        status: "error",
+        data: {
+          message: `Attendance record with ID ${id} not found`,
+          issues: [`Attendance record with ID ${id} not found`],
+        },
       };
     }
 
-    // Delete the record
     await db.delete(attendance).where(eq(attendance.id, id));
 
-    // Revalidate the attendance page to reflect the changes
     revalidatePath("/attendance");
 
-    return { message: "Attendance deleted successfully" };
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return {
-        message: error.errors[0].message,
-      };
-    }
-    console.log(error);
     return {
-      message: "Something went wrong",
+      status: "success",
+      data: {
+        message: "Attendance deleted successfully",
+      },
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      data: {
+        message: `Failed to delete attendance record. Please try again. ${error}`,
+        issues: [
+          `Failed to delete attendance record. Please try again. ${error}`,
+        ],
+      },
     };
   }
 }
@@ -186,7 +209,7 @@ export async function getAttendanceRecordsByStudentId(studentId: number) {
   return records;
 }
 
-// Optional: Get attendance records for a specific date range
+// Optional: Get attendance records by date range
 export async function getAttendanceRecordsByDateRange(
   startDate: Date,
   endDate: Date
@@ -209,3 +232,21 @@ export async function getAttendanceRecordsByDateRange(
 
   return records;
 }
+
+
+
+// export async function getAttendanceRecords() {
+//     const records = await db
+//       .select({
+//         id: attendance.id,
+//         studentId: attendance.studentId,
+//         studentName: students.name,
+//         date: attendance.date,
+//         status: attendance.status,
+//         notes: attendance.notes,
+//       })
+//       .from(attendance)
+//       .leftJoin(students, eq(attendance.studentId, students.id))
+//       .orderBy(desc(attendance.date));
+//     return records;
+//   }

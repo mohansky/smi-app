@@ -2,11 +2,7 @@
 import { db } from "@/db/drizzle";
 import { expenses, InsertExpense } from "@/db/schema";
 import { and, count, desc, eq, ilike, gte, lte } from "drizzle-orm";
-import {
-  ExpenseFilterParams,
-  // ExpenseFormValues,
-  expenseSchema,
-} from "@/lib/validations/expenses";
+import { ExpenseFilterParams, expenseSchema } from "@/lib/validations/expenses";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { ActionState, ExpenseFormState } from "@/types";
@@ -81,59 +77,12 @@ export async function getAllExpenses(params: ExpenseFilterParams) {
   };
 }
 
- 
-// export async function createExpense(input: unknown) {
-//   try {
-//     // Log the input for debugging
-//     console.log("Raw Input to createExpense:", input);
-
-//     // Preprocess input to align types
-//     const processedInput = {
-//       ...input,
-//       date: input.date ? new Date(input.date) : undefined,
-//     };
-
-//     // Validate and parse the input using zod schema
-//     const parsed = expenseSchema.safeParse(processedInput);
-
-//     if (!parsed.success) {
-//       console.error("Validation Errors:", parsed.error.errors);
-//       throw new Error("Invalid input data");
-//     }
-
-//     const data = parsed.data;
-
-//     // Map to snake_case for database insertion
-//     const dbData = {
-//       date: data.date,
-//       amount: data.amount.toString(), // Convert to string
-//       description: data.description,
-//       category: data.category,
-//       expense_status: data.expenseStatus,
-//       payment_method: data.paymentMethod,
-//       transaction_id: data.transactionId ?? null,
-//       notes: data.notes ?? null,
-//       created_at: data.createdAt,
-//       updated_at: data.updatedAt,
-//     };
-
-//     // Insert into the database
-//     const [newExpense] = await db.insert(expenses).values(dbData).returning();
-
-//     return newExpense;
-//   } catch (error) {
-//     console.error("Error in createExpense:", error);
-//     throw error;
-//   }
-// }
-
 export async function createExpense(
   prevState: ExpenseFormState,
   formData: FormData
-): Promise<ExpenseFormState> { 
-
+): Promise<ExpenseFormState> {
   try {
-    const rawData = { 
+    const rawData = {
       date: new Date(formData.get("date") as string),
       amount: Number(formData.get("amount")),
       description: formData.get("description") as string,
@@ -145,7 +94,7 @@ export async function createExpense(
 
     const validatedData = expenseSchema.parse(rawData);
 
-    const expenseData: InsertExpense = { 
+    const expenseData: InsertExpense = {
       date: validatedData.date,
       amount: validatedData.amount.toString(),
       description: validatedData.description,
@@ -158,7 +107,7 @@ export async function createExpense(
     await db.insert(expenses).values(expenseData);
 
     revalidatePath("/payments");
-    return { 
+    return {
       status: "success",
       data: {
         message: "Payment added successfully!",
@@ -166,7 +115,7 @@ export async function createExpense(
     };
   } catch (error) {
     console.error("Error adding payment:", error);
-    return { 
+    return {
       status: "error",
       data: {
         issues: ["An unexpected error occurred. Please try again."],
@@ -175,43 +124,48 @@ export async function createExpense(
   }
 }
 
-
 export async function deleteExpenseRecord(id: number): Promise<ActionState> {
-  try {
-    // Check if the record exists before trying to delete
+  try { 
     const existingRecord = await db.query.expenses.findFirst({
       where: eq(expenses.id, id),
     });
 
     if (!existingRecord) {
       return {
-        errors: {
-          root: ["Expense record not found"],
+        status: "error",
+        data: {
+          message: `Expense record with ID ${id} not found`,
+          issues: [`Expense record with ID ${id} not found`],
         },
       };
     }
-
-    // Delete the record
+ 
     await db.delete(expenses).where(eq(expenses.id, id));
 
     revalidatePath("/expenses");
     return {
-      message: "Expense deleted successfully",
+      status: "success",
+      data: {
+        message: "Expense deleted successfully",
+      },
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
-        errors: {
-          root: ["Failed to delete expense. Please try again."],
+        status: "error",
+        data: {
+          message: `Something went wrong: ${error.errors[0].message}`,
+          issues: [error.errors[0].message],
+        },
+      };
+    } else {
+      return {
+        status: "error",
+        data: {
+          message: "An unexpected error occurred. Please try again.",
+          issues: ["An unexpected error occurred. Please try again."],
         },
       };
     }
-
-    console.error("Unexpected error deleting expense record:", error);
-    return {
-      errors: {
-        root: ["An unexpected error occurred. Please try again later."],
-      },
-    };
   }
 }

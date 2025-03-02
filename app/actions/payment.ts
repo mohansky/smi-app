@@ -19,7 +19,7 @@ export async function createPayment(
 
   try {
     const rawData = {
-      studentId: studentId, 
+      studentId: studentId,
       date: new Date(formData.get("date") as string),
       amount: Number(formData.get("amount")),
       description: formData.get("description") as string,
@@ -53,16 +53,27 @@ export async function createPayment(
       },
     };
   } catch (error) {
-    console.error("Error adding payment:", error);
+    // console.error("Error adding payment:", error);
+    if (error instanceof z.ZodError) {
+      return {
+        studentId,
+        status: "error",
+        data: {
+          message: `Something went wrong: ${error.errors[0].message}`,
+          issues: [error.errors[0].message],
+        },
+      };
+    } else {
     return {
       studentId,
       status: "error",
       data: {
-        issues: ["An unexpected error occurred. Please try again."],
+        message: `An unexpected error occurred. Please try again. ${error}`,
+        issues: [`An unexpected error occurred. Please try again. ${error}`],
       },
     };
   }
-}
+}}
 
 export async function getPaymentsByStudent(studentId: number) {
   try {
@@ -218,7 +229,11 @@ export async function deletePaymentRecord(id: number): Promise<ActionState> {
 
     if (!existingRecord) {
       return {
-        message: `Payment record with ID ${id} not found`,
+        status: "error",
+        data: {
+          message: `Payment record with ID ${id} not found`,
+          issues: [`Payment record with ID ${id} not found`],
+        },
       };
     }
 
@@ -227,19 +242,28 @@ export async function deletePaymentRecord(id: number): Promise<ActionState> {
 
     revalidatePath("/payments");
     return {
-      message: "Payment deleted successfully",
+      status: "success",
+      data: {
+        message: "Payment deleted successfully",
+      },
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
-        message: error.errors[0].message,
+        status: "error",
+        data: {
+          message: `Something went wrong: ${error.errors[0].message}`,
+          issues: [error.errors[0].message],
+        },
+      };
+    } else {
+      return {
+        status: "error",
+        data: {
+          message: "An unexpected error occurred. Please try again.",
+          issues: ["An unexpected error occurred. Please try again."],
+        },
       };
     }
-
-    console.log(error);
-
-    return {
-      message: "Something went wrong",
-    };
   }
 }

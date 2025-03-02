@@ -15,7 +15,6 @@ export async function addStudent(
   formData: FormData
 ): Promise<AddStudentFormState> {
   try {
-    // Extract raw data from form
     const rawFormData = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
@@ -25,15 +24,20 @@ export async function addStudent(
       batch: formData.get("batch") as string,
       dateOfBirth: formData.get("dateOfBirth") as string | null,
       joiningDate: formData.get("joiningDate") as string | null,
-      isActive: formData.get("isActive") === "true", // Checkbox handling
+      isActive: formData.get("isActive") === "true",
     };
 
-    // Validate form data
     const validationResult = studentSchema.safeParse(rawFormData);
     if (!validationResult.success) {
       return {
         status: "error",
         data: {
+          message: Object.entries(
+            validationResult.error.flatten().fieldErrors
+          ).flatMap(([field, errors]) =>
+            errors.map((error) => `${field}: ${error}`)
+          ),
+
           issues: Object.entries(
             validationResult.error.flatten().fieldErrors
           ).flatMap(([field, errors]) =>
@@ -45,27 +49,26 @@ export async function addStudent(
 
     const data = validationResult.data;
 
-    // Check for existing student by email and phone
     const existingStudent = await db.query.students.findFirst({
       where: (students, { eq, and }) =>
         and(eq(students.email, data.email), eq(students.phone, data.phone)),
     });
 
     if (existingStudent) {
+      // console.log("existing student");
       return {
-        status: "error",
+        status: "existingStudent",
         data: {
+          message: ["A student with this email already exists."],
           issues: ["A student with this email already exists."],
         },
       };
     }
 
-    // Extract last 5 digits from the phone number
     const studentId = parseInt(data.phone.slice(-5), 10);
 
-    // Prepare data for insertion
     const insertData: InferInsertModel<typeof students> = {
-      id: studentId, // Set the id to the last 5 digits of the phone number
+      id: studentId,
       name: data.name,
       email: data.email,
       phone: data.phone,
@@ -79,11 +82,7 @@ export async function addStudent(
       isActive: data.isActive ?? true,
     };
 
-    // Insert the student record into the database
     await db.insert(students).values(insertData);
-
-    // Trigger revalidation or some other post-insert logic if necessary
-    revalidatePath("/students");
 
     return {
       status: "success",
@@ -92,10 +91,25 @@ export async function addStudent(
       },
     };
   } catch (error) {
-    console.error("Error adding student:", error);
+    // console.error("Error adding student:", error);
+    if (
+      error instanceof Error &&
+      error.message.includes("unique constraint") &&
+      error.message.includes("students_email_unique")
+    ) {
+      return {
+        status: "existingStudent",
+        data: {
+          message: "A student with this email already exists.",
+          issues: ["A student with this email already exists."],
+        },
+      };
+    }
+    revalidatePath("/dashboard");
     return {
       status: "error",
       data: {
+        message: "An unexpected error occurred. Please try again.",
         issues: ["An unexpected error occurred. Please try again."],
       },
     };
@@ -127,17 +141,15 @@ export async function updateStudent(
       isActive: formData.get("isActive") === "true",
     };
 
-    // console.log("Processed Raw Form Data:", rawFormData);
-
     const result = studentSchema.safeParse(rawFormData);
 
     if (!result.success) {
-      // console.error("Validation Errors:", result.error.flatten());
       return {
         studentId,
         initialValues,
         status: "error",
         data: {
+          message: "Validation Error please check entries.",
           issues: Object.entries(result.error.flatten().fieldErrors).flatMap(
             ([field, errors]) => errors.map((error) => `${field}: ${error}`)
           ),
@@ -176,12 +188,13 @@ export async function updateStudent(
       },
     };
   } catch (error) {
-    console.error("Detailed Error updating student:", error);
+    // console.error("Detailed Error updating student:", error);
     return {
       studentId,
       initialValues,
       status: "error",
       data: {
+        message: "An unexpected error occurred. Please try again.",
         issues: [
           "An unexpected error occurred. Please try again.",
           error instanceof Error ? error.message : String(error),
@@ -200,25 +213,30 @@ export async function deleteStudent(studentId: number): Promise<ActionState> {
 
     if (!existingStudent) {
       return {
-        errors: {
-          root: ["Student not found"],
+        status: "error",
+        data: {
+          message: `Attendance record with ID ${studentId} not found`,
+          issues: [`Attendance record with ID ${studentId} not found`],
         },
       };
     }
 
-    // Delete the student
     await db.delete(students).where(eq(students.id, studentId));
 
     revalidatePath("/students");
 
     return {
-      message: "Student deleted successfully",
+      status: "success",
+      data: {
+        message: "Student deleted successfully",
+      },
     };
   } catch (error) {
-    console.error("Error deleting student:", error);
     return {
-      errors: {
-        root: ["Failed to delete student. Please try again."],
+      status: "error",
+      data: {
+        message: `Failed to delete student. Please try again. ${error}`,
+        issues: [`Failed to delete student. Please try again. ${error}`],
       },
     };
   }
@@ -291,89 +309,3 @@ export async function getStudentById(studentId: number): Promise<{
     };
   }
 }
-
-// export async function getCombinedStats(month: string): Promise<CombinedStats> {
-//   const selectedDate = new Date(month);
-//   const monthStart = startOfMonth(selectedDate);
-//   const monthEnd = endOfMonth(selectedDate);
-//   const yearStart = startOfMonth(subYears(selectedDate, 1));
-
-//   // Get active students and their instruments for the month
-//   const activeStudents = await db
-//     .select({
-//       id: students.id,
-//       instrument: students.instrument,
-//     })
-//     .from(students)
-//     .where(sql`is_active = true AND joining_date <= ${monthEnd}`);
-
-//   // Get active students for the past year
-//   const yearlyActiveStudents = await db
-//     .select({
-//       id: students.id,
-//       instrument: students.instrument,
-//     })
-//     .from(students)
-//     .where(
-//       sql`is_active = true AND joining_date <= ${monthEnd} AND joining_date >= ${yearStart}`
-//     );
-
-//   // Get monthly payments
-//   const monthlyPayments = await db
-//     .select({
-//       total: sql`SUM(amount)::numeric`,
-//     })
-//     .from(payments).where(sql`
-//         date >= ${monthStart} AND
-//         date <= ${monthEnd} AND
-//         payment_status = 'PAID'
-//       `);
-
-//   // Get yearly payments
-//   const yearlyPayments = await db
-//     .select({
-//       total: sql`SUM(amount)::numeric`,
-//     })
-//     .from(payments).where(sql`
-//         date >= ${yearStart} AND
-//         date <= ${monthEnd} AND
-//         payment_status = 'PAID'
-//       `);
-
-//   // Calculate instrument breakdowns
-//   const monthlyInstrumentCounts = Object.values(INSTRUMENTS).map(
-//     (instrument) => ({
-//       instrument,
-//       count: activeStudents.filter(
-//         (student) => student.instrument === instrument
-//       ).length,
-//     })
-//   );
-
-//   const yearlyInstrumentCounts = Object.values(INSTRUMENTS).map(
-//     (instrument) => ({
-//       instrument,
-//       count: yearlyActiveStudents.filter(
-//         (student) => student.instrument === instrument
-//       ).length,
-//     })
-//   );
-
-//   const hasData =
-//     activeStudents.length > 0 || Number(monthlyPayments[0]?.total) > 0;
-
-//   return {
-//     monthly: {
-//       activeStudents: activeStudents.length,
-//       totalPayments: Number(monthlyPayments[0]?.total || 0),
-//       totalExpenses: Number(monthlyExpenses[0]?.total || 0),
-//       instrumentBreakdown: monthlyInstrumentCounts,
-//     },
-//     yearly: {
-//       activeStudents: yearlyActiveStudents.length,
-//       totalPayments: Number(yearlyPayments[0]?.total || 0),
-//       instrumentBreakdown: yearlyInstrumentCounts,
-//     },
-//     hasData,
-//   };
-// }

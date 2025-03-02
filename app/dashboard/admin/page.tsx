@@ -25,7 +25,7 @@ export default async function MonthlyStatsPage(props: PageProps) {
 
   return (
     <Suspense fallback={<MonthlyStatsLoading />}>
-      <div className="w-[90vw] md:w-[75vw] my-10">
+      <div className="w-[98vw] md:w-[75vw] my-10">
         <AddStudentButton />
 
         <div className="mb-8">
