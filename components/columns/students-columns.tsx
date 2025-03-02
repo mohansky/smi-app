@@ -32,13 +32,16 @@ export const studentsColumns: ColumnDef<StudentFormValues>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="sticky left-0 z-10">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            // className="sticky left-0 z-10"
+          >
+            Name
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => (

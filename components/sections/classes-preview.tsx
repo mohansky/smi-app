@@ -32,23 +32,27 @@ export default function ClassesPreview({
         height={480}
       />
       <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-black/30" />
-      <div className="absolute top-1 left-1 p-8">
-        <Heading className="mb-2 text-white">{title}</Heading>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <Heading fontweight="bold" className="mb-2 text-white text-center">
+          {title}
+        </Heading>
         <Card className="p-5 bg-gray-800/50 text-white mb-5">
           <CardContent>
-            <Heading size="xs" fontweight="normal" className="mb-1">
-              Regular Classes: <br />
-              {fees}
-              <br />
-              {duration}
+            <Heading size="xs" fontweight="semibold" className="mb-1">
+              Regular Classes:
             </Heading>
-            <p className="text-balance text-xs">
-              Crash Course: <br /> {crashCourse}
-            </p>
+            <p className="text-balance">{fees}</p>
+            <p className="text-balance text-sm">{duration}</p>
+            <Heading size="xs" fontweight="semibold" className="mt-3 mb-1">
+              Crash Course:
+            </Heading>
+            <p className=" text-sm">{crashCourse}</p>
           </CardContent>
         </Card>
         <Link href={`${slug}`} title={title}>
-          <Button size="lg">Details</Button>
+          <Button size="lg" className="w-full">
+            Details
+          </Button>
         </Link>
       </div>
     </div>

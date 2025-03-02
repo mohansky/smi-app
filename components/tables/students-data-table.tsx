@@ -38,6 +38,7 @@ import {
 } from "../ui/dialog";
 import AddStudentForm from "../forms/add-student-form";
 import { Heading } from "../custom-ui/heading";
+import { addStudent } from "@/app/actions/student";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -90,7 +91,7 @@ export function StudentsDataTable<TData, TValue>({
             <DialogHeader>
               <DialogTitle>Add New Student</DialogTitle>
             </DialogHeader>
-            <AddStudentForm />
+            <AddStudentForm addStudent={addStudent} />
           </DialogContent>
         </Dialog>
       </div>

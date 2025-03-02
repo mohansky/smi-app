@@ -15,15 +15,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { formSchema } from "@/lib/formValidation";
-import { FullActionState } from "@/types";
+import { ActionState } from "@/types";
 
 export const ContactForm = ({
   onFormAction,
 }: {
   onFormAction: (
-    prevState: FullActionState,
+    prevState: ActionState,
     data: FormData
-  ) => Promise<FullActionState>;
+  ) => Promise<ActionState>;
 }) => {
   const [state, formAction, isPending] = useActionState(onFormAction, {
     status: "idle",

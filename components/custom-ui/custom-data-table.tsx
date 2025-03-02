@@ -48,6 +48,11 @@ interface FilterConfig {
   placeholder: string;
 }
 
+// Add this new type helper
+// type KeysOfType<T, V> = {
+//   [K in keyof T]: T[K] extends V ? K : never;
+// }[keyof T];
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -143,6 +148,46 @@ export function CustomDataTable<TData, TValue>({
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   };
 
+  const [filterCounts, setFilterCounts] = React.useState<
+    Record<string, number>
+  >({});
+
+  React.useEffect(() => {
+    const counts: Record<string, number> = {};
+
+    // Count for each column filter
+    columnFilters.forEach((filter) => {
+      if (filter.value && String(filter.value).trim() !== "") {
+        const filteredCount = data.filter((item) => {
+          const itemValue = item[filter.id as keyof TData];
+          if (itemValue === null || itemValue === undefined) {
+            return false;
+          }
+          return String(itemValue)
+            .toLowerCase()
+            .includes(String(filter.value).toLowerCase());
+        }).length;
+
+        counts[filter.id] = filteredCount;
+      }
+    });
+
+    // Count for date range filter
+    if (dateRange?.from && dateRange?.to) {
+      const dateFilteredCount = data.filter((item: TData) => {
+        const itemDate = parseDateSafely(item[dateField] as DateInput);
+        if (!itemDate) return false;
+        return isWithinInterval(itemDate, {
+          start: startOfDay(dateRange.from || new Date()),
+          end: endOfDay(dateRange.to || new Date()),
+        });
+      }).length;
+      counts["dateRange"] = dateFilteredCount;
+    }
+
+    setFilterCounts(counts);
+  }, [columnFilters, dateRange, data, dateField]);
+
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -223,88 +268,97 @@ export function CustomDataTable<TData, TValue>({
       {filters.length > 0 && (
         <div className="flex flex-wrap items-center gap-4 my-2">
           {filters.map((filter) => (
-            <Input
-              key={filter.column}
-              placeholder={filter.placeholder}
-              value={
-                (table.getColumn(filter.column)?.getFilterValue() as string) ??
-                ""
-              }
-              onChange={(event) =>
-                table
-                  .getColumn(filter.column)
-                  ?.setFilterValue(event.target.value)
-              }
-              className="max-w-xs"
-            />
+            <div key={filter.column} className="flex flex-col gap-1">
+              <Input
+                placeholder={filter.placeholder}
+                value={
+                  (table
+                    .getColumn(filter.column)
+                    ?.getFilterValue() as string) ?? ""
+                }
+                onChange={(event) =>
+                  table
+                    .getColumn(filter.column)
+                    ?.setFilterValue(event.target.value)
+                }
+                className="max-w-xs"
+              />
+              {filterCounts[filter.column] !== undefined && (
+                <div className="text-sm text-muted-foreground pl-2">
+                  {filterCounts[filter.column]} matches
+                </div>
+              )}
+            </div>
           ))}
         </div>
       )}
 
-      <div className="rounded-md border  overflow-x-auto">
-        <Table className="min-w-full border-collapse border">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+      <div className="rounded-md border">
+        <div className="overflow-x-auto">
+          <Table className="min-w-full border-collapse border">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="even:bg-muted/75"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
                         )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="even:bg-muted/75"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No data available.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              {table.getFooterGroups().map((footerGroup) => (
+                <TableRow key={footerGroup.id}>
+                  {footerGroup.headers.map((header) => (
+                    <TableCell key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext()
+                          )}
                     </TableCell>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No data available.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            {table.getFooterGroups().map((footerGroup) => (
-              <TableRow key={footerGroup.id}>
-                {footerGroup.headers.map((header) => (
-                  <TableCell key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext()
-                        )}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableFooter>
-        </Table>
+              ))}
+            </TableFooter>
+          </Table>
+        </div>
       </div>
 
       <div className="flex items-center justify-between space-x-2 py-4">
@@ -312,10 +366,6 @@ export function CustomDataTable<TData, TValue>({
           Showing {filteredData.length} of {data.length} records
         </div>
         <div className="flex items-center space-x-6">
-          {/* <div className="text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div> */}
           <div className="space-x-2">
             <Button
               variant="outline"

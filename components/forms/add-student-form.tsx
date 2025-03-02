@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -28,13 +28,42 @@ import { z } from "zod";
 import { DialogClose, DialogFooter } from "../ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
+// Helper function to get safe date value with TypeScript types
+const getSafeDate = (date: Date | string | null | undefined): Date => {
+  try {
+    if (date === null || date === undefined) {
+      return new Date();
+    }
+    
+    const d = date instanceof Date ? date : new Date(date);
+    return !isNaN(d.getTime()) ? d : new Date();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_) {
+    // Ignore error and return default date
+    return new Date();
+  }
+};
+
+// Helper function to format date for input with TypeScript types
+const formatDateForInput = (date: Date | string | null | undefined): string => {
+  try {
+    const d = getSafeDate(date);
+    return d.toISOString().split("T")[0];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_) {
+    // Ignore error and return empty string
+    return "";
+  }
+};
+
+
 export const AddStudentForm = ({
-  addStudent, 
+  addStudent,
 }: {
   addStudent: (
     prevState: AddStudentFormState,
     data: FormData
-  ) => Promise<AddStudentFormState>; 
+  ) => Promise<AddStudentFormState>;
 }) => {
   const [state, formAction, isPending] = useActionState(addStudent, {
     status: "idle",
@@ -45,6 +74,11 @@ export const AddStudentForm = ({
     },
   });
 
+  // Create safe default dates
+  const today = new Date();
+  const defaultDob = new Date();
+  defaultDob.setFullYear(today.getFullYear() - 10); // Default age of 10 years
+
   const form = useForm<z.infer<typeof studentSchema>>({
     resolver: zodResolver(studentSchema),
     defaultValues: {
@@ -54,12 +88,18 @@ export const AddStudentForm = ({
       instrument: INSTRUMENTS.GUITAR,
       grade: GRADES.GRADE1,
       batch: BATCHES.MT,
-      dateOfBirth: new Date(),
-      joiningDate: new Date(),
+      dateOfBirth: defaultDob,
+      joiningDate: today,
       isActive: true,
     },
     mode: "onChange",
   });
+
+  // Track date values in state to avoid conversion issues
+  const [dateOfBirth, setDateOfBirth] = useState(
+    formatDateForInput(defaultDob)
+  );
+  const [joiningDate, setJoiningDate] = useState(formatDateForInput(today));
 
   useEffect(() => {
     const subscription = form.watch((values) => {
@@ -94,14 +134,13 @@ export const AddStudentForm = ({
         {state?.data?.message && (
           <div
             className={`font-bold mb-10 ${
-              state.data.issues ? "text-destructive" : "text-active"
+              state.status === "error" || state.status === "existingStudent"
+                ? "text-destructive"
+                : "text-active"
             }`}
           >
-            {state.data.issues ? (
-              <p>Invalid Fields please check.</p>
-            ) : (
-              <p>{state.data.message}</p>
-            )}
+            {state.status === "error" && <p>Invalid Fields please check.</p>}
+            {state.status === "existingStudent" && <p>{state.data.message}</p>}
           </div>
         )}
         <Form {...form}>
@@ -155,7 +194,7 @@ export const AddStudentForm = ({
             </div>
 
             <div className="grid grid-cols-2 gap-8">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="dateOfBirth"
                 render={({ field: { onChange, value, ...field } }) => (
@@ -176,9 +215,9 @@ export const AddStudentForm = ({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="joiningDate"
                 render={({ field: { onChange, value, ...field } }) => (
@@ -194,6 +233,53 @@ export const AddStudentForm = ({
                             : ""
                         }
                         onChange={(e) => onChange(new Date(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+              <FormField
+                control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        value={dateOfBirth}
+                        onChange={(e) => {
+                          setDateOfBirth(e.target.value);
+                          if (e.target.value) {
+                            field.onChange(new Date(e.target.value));
+                          }
+                        }}
+                        name="dateOfBirth"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="joiningDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Joining Date</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        value={joiningDate}
+                        onChange={(e) => {
+                          setJoiningDate(e.target.value);
+                          if (e.target.value) {
+                            field.onChange(new Date(e.target.value));
+                          }
+                        }}
+                        name="joiningDate"
                       />
                     </FormControl>
                     <FormMessage />

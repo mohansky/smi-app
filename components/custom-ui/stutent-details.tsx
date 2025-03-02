@@ -38,7 +38,7 @@ export default function StudentDetails({
   student: StudentFormValues;
 }) {
   return (
-    <Card>
+    <Card className="p-4">
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle>

@@ -16,7 +16,7 @@ export default function ClassesList() {
               <ClassesPreview
                 key={classe.slug}
                 title={classe.title}
-                description={classe.description}
+                // description={classe.description}
                 duration={classe.duration}
                 fees={classe.fees}
                 crashCourse={classe.crashCourse}
