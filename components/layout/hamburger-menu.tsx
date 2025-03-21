@@ -48,7 +48,7 @@ export default function HamburgerMenu() {
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
-              <AuthButton />
+{/*               <AuthButton /> */}
               {/* <SheetTrigger className="uppercase mx-auto">
                 <AuthButton />
               </SheetTrigger> */}
