@@ -84,6 +84,14 @@ export const DemoClassForm = ({
         </div>
       )}
       <form action={formAction} className="space-y-4 w-full">
+          <input
+    class="password-input"
+    type="text"
+    id="a_password"
+    name="a_password"
+    tabindex="-1"
+    autocomplete="off"
+  />
         <input id="title" name="title" type="hidden" value={fetchTitle} />
 
         <FormField
