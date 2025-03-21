@@ -85,3 +85,8 @@
     @apply bg-background text-foreground font-firaSans;
   }
 }
+
+.password-input{
+  display: none !important;
+  visibility: hidden;
+}
