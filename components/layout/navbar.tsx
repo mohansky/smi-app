@@ -28,7 +28,7 @@ export default function Navbar() {
             </Link>
           </NavigationMenuItem>
         ))}
-        <AuthButton />
+{/*         <AuthButton /> */}
         <ModeToggler />
       </NavigationMenuList>
     </NavigationMenu>
