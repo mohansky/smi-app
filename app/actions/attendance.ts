@@ -71,6 +71,7 @@ export async function submitAttendanceAction(
     await db.insert(attendance).values(insertData);
 
     revalidatePath("/attendance");
+    revalidatePath("/"); // Consider revalidating parent routes if needed
 
     return {
       studentId,
@@ -233,20 +234,4 @@ export async function getAttendanceRecordsByDateRange(
   return records;
 }
 
-
-
-// export async function getAttendanceRecords() {
-//     const records = await db
-//       .select({
-//         id: attendance.id,
-//         studentId: attendance.studentId,
-//         studentName: students.name,
-//         date: attendance.date,
-//         status: attendance.status,
-//         notes: attendance.notes,
-//       })
-//       .from(attendance)
-//       .leftJoin(students, eq(attendance.studentId, students.id))
-//       .orderBy(desc(attendance.date));
-//     return records;
-//   }
+ 
