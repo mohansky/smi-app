@@ -10,7 +10,7 @@ import {
   Calendar,
   CheckCircle2,
   CreditCard,
-  DollarSign,
+  BadgeIndianRupee,
   MessageCircle,
   Tag,
 } from "lucide-react";
@@ -24,6 +24,36 @@ import {
 } from "../ui/dialog";
 
 export const paymentColumns: ColumnDef<PaymentFormValues>[] = [
+  {
+    accessorKey: "amount",
+    header: () => <div className="text-left">Amount</div>,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 0,
+      }).format(amount);
+
+      return <div className="text-left font-medium">{formatted}</div>;
+    },
+    footer: ({ table }) => {
+      const rows = table.getFilteredRowModel().rows;
+      const total = rows.reduce((sum, row) => {
+        return sum + parseFloat(row.getValue("amount") || "0");
+      }, 0);
+
+      const formatted = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 0,
+      }).format(total);
+
+      return (
+        <div className="text-left font-semibold py-2">Total: {formatted}</div>
+      );
+    },
+  },
   {
     accessorKey: "studentName",
     header: "Student Name",
@@ -116,7 +146,7 @@ export const paymentColumns: ColumnDef<PaymentFormValues>[] = [
                   </div>
 
                   <div className="flex items-center">
-                    <DollarSign className="mr-2 h-5 w-5 text-muted-foreground" />
+                    <BadgeIndianRupee className="mr-2 h-5 w-5 text-muted-foreground" />
                     <span className="font-medium">Amount:</span>
                     <span className="ml-2 font-bold">
                       {new Intl.NumberFormat("en-US", {
@@ -188,36 +218,6 @@ export const paymentColumns: ColumnDef<PaymentFormValues>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("notes") || "N/A"}</div>
     ),
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        minimumFractionDigits: 0,
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-    footer: ({ table }) => {
-      const rows = table.getFilteredRowModel().rows;
-      const total = rows.reduce((sum, row) => {
-        return sum + parseFloat(row.getValue("amount") || "0");
-      }, 0);
-
-      const formatted = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        minimumFractionDigits: 0,
-      }).format(total);
-
-      return (
-        <div className="text-right font-semibold py-2">Total: {formatted}</div>
-      );
-    },
   },
   {
     id: "delete",

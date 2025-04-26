@@ -17,11 +17,10 @@ import {
 import {
   Calendar,
   CreditCard,
-  // FileText,
   Tag,
   CheckCircle2,
   MessageCircle,
-  DollarSign,
+  BadgeIndianRupee,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
@@ -115,7 +114,7 @@ export const studentPaymentColumns: ColumnDef<PaymentFormValues>[] = [
                   </div>
 
                   <div className="flex items-center">
-                    <DollarSign className="mr-2 h-5 w-5 text-muted-foreground" />
+                    <BadgeIndianRupee className="mr-2 h-5 w-5 text-muted-foreground" />
                     <span className="font-medium">Amount:</span>
                     <span className="ml-2 font-bold">
                       {new Intl.NumberFormat("en-US", {
