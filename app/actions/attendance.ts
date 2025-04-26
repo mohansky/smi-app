@@ -95,6 +95,36 @@ export async function submitAttendanceAction(
   }
 }
 
+// export async function getAttendanceRecords(): Promise<{
+//   attendance?: AttendanceFormValues[];
+//   error?: string;
+// }> {
+//   try {
+//     const rawRecords = await db
+//       .select({
+//         id: attendance.id,
+//         studentId: attendance.studentId,
+//         studentName: students.name,
+//         date: attendance.date,
+//         status: attendance.status,
+//         notes: attendance.notes,
+//       })
+//       .from(attendance)
+//       .leftJoin(students, eq(attendance.studentId, students.id))
+//       .orderBy(desc(attendance.date));
+
+//     // Use Zod to validate and transform the records directly
+//     const formattedRecords = rawRecords.map((record) =>
+//       attendanceSchema.parse(record)
+//     );
+
+//     return { attendance: formattedRecords };
+//   } catch (error) {
+//     console.error("Failed to fetch attendance records:", error);
+//     return { error: "Failed to fetch attendance records" };
+//   }
+// }
+
 export async function getAttendanceRecords(): Promise<{
   attendance?: AttendanceFormValues[];
   error?: string;
@@ -113,10 +143,19 @@ export async function getAttendanceRecords(): Promise<{
       .leftJoin(students, eq(attendance.studentId, students.id))
       .orderBy(desc(attendance.date));
 
-    // Use Zod to validate and transform the records directly
-    const formattedRecords = rawRecords.map((record) =>
-      attendanceSchema.parse(record)
-    );
+    // Transform the records before validating with Zod
+    const formattedRecords = rawRecords.map((record) => {
+      // Convert date string to Date object if needed
+      const dateValue = typeof record.date === 'string' 
+        ? new Date(record.date) 
+        : record.date;
+      
+      // Now parse with the transformed date
+      return attendanceSchema.parse({
+        ...record,
+        date: dateValue
+      });
+    });
 
     return { attendance: formattedRecords };
   } catch (error) {
@@ -233,5 +272,3 @@ export async function getAttendanceRecordsByDateRange(
 
   return records;
 }
-
- 
