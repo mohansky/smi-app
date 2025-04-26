@@ -70,8 +70,10 @@ export async function submitAttendanceAction(
 
     await db.insert(attendance).values(insertData);
 
-    revalidatePath("/attendance");
-    revalidatePath("/"); // Consider revalidating parent routes if needed
+ 
+    revalidatePath("/dashboard/admin/attendance"); 
+    revalidatePath("/dashboard/admin");
+    revalidatePath("/dashboard");
 
     return {
       studentId,
@@ -95,40 +97,11 @@ export async function submitAttendanceAction(
   }
 }
 
-// export async function getAttendanceRecords(): Promise<{
-//   attendance?: AttendanceFormValues[];
-//   error?: string;
-// }> {
-//   try {
-//     const rawRecords = await db
-//       .select({
-//         id: attendance.id,
-//         studentId: attendance.studentId,
-//         studentName: students.name,
-//         date: attendance.date,
-//         status: attendance.status,
-//         notes: attendance.notes,
-//       })
-//       .from(attendance)
-//       .leftJoin(students, eq(attendance.studentId, students.id))
-//       .orderBy(desc(attendance.date));
-
-//     // Use Zod to validate and transform the records directly
-//     const formattedRecords = rawRecords.map((record) =>
-//       attendanceSchema.parse(record)
-//     );
-
-//     return { attendance: formattedRecords };
-//   } catch (error) {
-//     console.error("Failed to fetch attendance records:", error);
-//     return { error: "Failed to fetch attendance records" };
-//   }
-// }
-
 export async function getAttendanceRecords(): Promise<{
   attendance?: AttendanceFormValues[];
   error?: string;
 }> {
+
   try {
     const rawRecords = await db
       .select({
@@ -143,17 +116,13 @@ export async function getAttendanceRecords(): Promise<{
       .leftJoin(students, eq(attendance.studentId, students.id))
       .orderBy(desc(attendance.date));
 
-    // Transform the records before validating with Zod
     const formattedRecords = rawRecords.map((record) => {
-      // Convert date string to Date object if needed
-      const dateValue = typeof record.date === 'string' 
-        ? new Date(record.date) 
-        : record.date;
-      
-      // Now parse with the transformed date
+      const dateValue =
+        typeof record.date === "string" ? new Date(record.date) : record.date;
+
       return attendanceSchema.parse({
         ...record,
-        date: dateValue
+        date: dateValue,
       });
     });
 
@@ -187,7 +156,7 @@ export async function getAttendanceRecordsByStudent(studentId: number) {
     return records;
   } catch (error) {
     console.error("Error fetching attendance records:", error);
-    return []; 
+    return [];
   }
 }
 
@@ -230,7 +199,6 @@ export async function deleteAttendanceRecord(id: number): Promise<ActionState> {
   }
 }
 
-// Optional: Get attendance records for a specific student
 export async function getAttendanceRecordsByStudentId(studentId: number) {
   const records = await db
     .select({
