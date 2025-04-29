@@ -33,7 +33,7 @@ export const ContactForm = ({
       issues: [],
     },
   });
-
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,26 +41,25 @@ export const ContactForm = ({
       phone: "",
       email: "",
       message: "",
+      website: "",
     },
     mode: "onChange",
   });
-
-  
+ 
   useEffect(() => {
     if (state.status === "success" && !state.data?.issues) {
-      form.reset(); 
+      form.reset();
     }
   }, [state, form]);
-
+  
   useEffect(() => {
     const subscription = form.watch((values) => {
       form.trigger();
       return values;
     });
-
     return () => subscription.unsubscribe();
   }, [form]);
-
+  
   return (
     <Form {...form}>
       {state?.data?.message && (
@@ -76,16 +75,7 @@ export const ContactForm = ({
           )}
         </div>
       )}
-
       <form action={formAction} className="space-y-8">
-          <input
-    class="password-input"
-    type="text"
-    id="a_password"
-    name="a_password"
-   tabIndex={-1}
-    autocomplete="off"
-  />
         <FormField
           control={form.control}
           name="senderName"
@@ -99,7 +89,6 @@ export const ContactForm = ({
             </FormItem>
           )}
         />
-
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -114,7 +103,6 @@ export const ContactForm = ({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="email"
@@ -129,7 +117,27 @@ export const ContactForm = ({
             )}
           />
         </div>
-
+        
+        {/* Honeypot field - hidden from real users but visible to bots */}
+        <div style={{ display: 'none' }} aria-hidden="true">
+          <FormField
+            control={form.control}
+            name="website"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Website</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Your Website" 
+                    {...field} 
+                    tabIndex={-1}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        
         <FormField
           control={form.control}
           name="message"
@@ -148,7 +156,6 @@ export const ContactForm = ({
             </FormItem>
           )}
         />
-
         <Button size="lg" type="submit" disabled={isPending}>
           {isPending ? "Submitting..." : "Submit"}
         </Button>
