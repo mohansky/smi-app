@@ -9,9 +9,11 @@ export const formSchema = z.object({
   senderName: z.string().trim().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  phone: z.string().trim()
-  .min(10, { message: 'Phone number Must have at least 10 digits.' })
-  .regex(phoneValidation, { message: 'Invalid phone number.' }), 
+  phone: z
+    .string()
+    .trim()
+    .min(10, { message: "Phone number Must have at least 10 digits." })
+    .regex(phoneValidation, { message: "Invalid phone number." }),
   email: z.string().trim().email({
     message: "Invalid email.",
   }),
@@ -19,4 +21,5 @@ export const formSchema = z.object({
     message: "Message must be at least 5 characters.",
   }),
   title: z.string().optional(),
+  website: z.string().optional(),
 });
